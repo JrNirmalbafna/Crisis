@@ -1,0 +1,39 @@
+sequenceDiagram
+    autonumber
+    participant PRED as PredictionService
+    participant UQ as UQService
+    participant EXP as ExplainabilityService
+    participant CONS as Consensus
+    participant PHYS as PhysicsValidationService
+    participant DSS as DecisionSupportService
+    participant DB as PostgreSQL
+    participant UI as Dashboard
+
+    Note over PRED: CME candidate v=2800 km/s, impact_prob=0.87
+
+    PRED->>UQ: compute_intervals()
+    PRED->>EXP: generate_explanations()
+    UQ->>CONS: PI90, agreement=0.91
+    EXP->>CONS: "High speed + wide halo"
+
+    Note over CONS: RF · XGB · LSTM · Transformer agree<br/>Consensus: HIGH RISK
+
+    CONS->>DB: INSERT predictions (is_consensus=true)
+    CONS->>PHYS: validate(consensus)
+
+    PHYS->>PHYS: PHY-10 speed → PASS
+    PHYS->>PHYS: PHY-11 kinematic → PASS
+    PHYS->>PHYS: PHY-03 dynamic pressure P_d=28 nPa >> 15 nPa
+    Note over PHYS: HARD_FAIL
+
+    PHYS->>DB: INSERT physics_validation_results<br/>(HARD_FAIL, automation_allowed=false)
+
+    PHYS->>DSS: ValidationResult + confidence_multiplier=0.25
+    Note over DSS: Mode = ADVISORY_ONLY<br/>Suppress automated safe-mode
+
+    DSS->>DB: INSERT recommendations<br/>(scientist_review, manual_review_required, HIGH)
+    DSS->>DB: INSERT audit_logs (physics_blocked)
+
+    UI->>DB: GET event + physics status
+    UI-->>UI: Warning banner: consensus high-risk<br/>but PHY-03 failed — manual review required
+    UI-->>UI: Grey out automated ops actions

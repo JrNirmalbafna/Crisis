@@ -1,0 +1,202 @@
+erDiagram
+    SATELLITES {
+        int id PK
+        string name
+        string agency
+        string orbit_type
+        string description
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    INSTRUMENTS {
+        int id PK
+        int satellite_id FK
+        string name
+        string type
+        string description
+        string status
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    TIME_SERIES_META {
+        int id PK
+        int instrument_id FK
+        string parameter_name
+        string storage_type
+        string storage_location
+        timestamptz time_start
+        timestamptz time_end
+        int resolution_sec
+        timestamptz created_at
+    }
+
+    PIPELINE_RUNS {
+        uuid id PK
+        string trigger_type
+        timestamptz started_at
+        timestamptz completed_at
+        string status
+        string input_data_hash
+        string config_version
+        timestamptz created_at
+    }
+
+    EVENTS {
+        int id PK
+        uuid pipeline_run_id FK
+        string event_type
+        string detection_source
+        string external_catalog_id
+        timestamptz start_time
+        timestamptz peak_time
+        timestamptz end_time
+        numeric detection_confidence
+        string status
+        jsonb metadata_json
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    EVENT_OBSERVATIONS {
+        int id PK
+        int event_id FK
+        int satellite_id FK
+        int instrument_id FK
+        int time_series_meta_id FK
+        timestamptz observed_start
+        timestamptz observed_end
+        numeric quality_score
+        string comments
+    }
+
+    FUSION_SNAPSHOTS {
+        bigint id PK
+        timestamptz timestamp
+        string parameter_name
+        numeric fused_value
+        jsonb weights_json
+        timestamptz created_at
+    }
+
+    MODEL_RUNS {
+        int id PK
+        string model_name
+        string model_family
+        string version
+        string training_data_desc
+        timestamptz training_start
+        timestamptz training_end
+        jsonb metrics_json
+        timestamptz created_at
+    }
+
+    PREDICTIONS {
+        int id PK
+        int event_id FK
+        int model_run_id FK
+        uuid pipeline_run_id FK
+        string prediction_type
+        numeric predicted_value
+        string predicted_unit
+        timestamptz prediction_timestamp
+        int horizon_seconds
+        boolean is_consensus
+        jsonb base_models_included
+        timestamptz created_at
+    }
+
+    UNCERTAINTY_ESTIMATES {
+        int id PK
+        int prediction_id FK
+        numeric lower_bound
+        numeric upper_bound
+        string bound_unit
+        numeric confidence_level
+        numeric reliability_score
+        numeric model_agreement_score
+        string uncertainty_shape
+        jsonb details_json
+        timestamptz created_at
+    }
+
+    EXPLANATIONS {
+        int id PK
+        int prediction_id FK
+        string explanation_type
+        jsonb importance_json
+        text physics_explanation
+        text nl_explanation
+        string visualization_ref
+        timestamptz created_at
+    }
+
+    PHYSICS_VALIDATION_RESULTS {
+        int id PK
+        int prediction_id FK
+        string validation_status
+        jsonb violated_rules
+        numeric confidence_multiplier
+        boolean automation_allowed
+        timestamptz checked_at
+        text comments
+    }
+
+    USERS {
+        uuid id PK
+        string username
+        string role
+        timestamptz created_at
+    }
+
+    RECOMMENDATIONS {
+        int id PK
+        int event_id FK
+        int prediction_id FK
+        string target_system
+        string recommended_action
+        string action_priority
+        text justification_text
+        timestamptz valid_from
+        timestamptz valid_until
+        timestamptz created_at
+    }
+
+    AUDIT_LOGS {
+        bigint id PK
+        uuid user_id FK
+        int event_id FK
+        int prediction_id FK
+        int recommendation_id FK
+        string action_type
+        jsonb action_details
+        timestamptz timestamp
+    }
+
+    SATELLITES ||--o{ INSTRUMENTS : has
+    INSTRUMENTS ||--o{ TIME_SERIES_META : generates
+
+    SATELLITES ||--o{ EVENT_OBSERVATIONS : observes
+    INSTRUMENTS ||--o{ EVENT_OBSERVATIONS : records
+    TIME_SERIES_META ||--o{ EVENT_OBSERVATIONS : provides_data_for
+    EVENTS ||--o{ EVENT_OBSERVATIONS : is_observed_by
+
+    PIPELINE_RUNS ||--o{ EVENTS : detects_in
+    PIPELINE_RUNS ||--o{ PREDICTIONS : generates_in
+
+    MODEL_RUNS ||--o{ PREDICTIONS : produces
+    EVENTS ||--o{ PREDICTIONS : has_prediction
+
+    PREDICTIONS ||--o| UNCERTAINTY_ESTIMATES : has_uncertainty
+    PREDICTIONS ||--o{ EXPLANATIONS : has_explanation
+    PREDICTIONS ||--o| PHYSICS_VALIDATION_RESULTS : validated_by
+
+    EVENTS ||--o{ RECOMMENDATIONS : triggers
+    PREDICTIONS ||--o{ RECOMMENDATIONS : based_on
+
+    USERS ||--o{ AUDIT_LOGS : performs
+    EVENTS ||--o{ AUDIT_LOGS : logged_in
+    PREDICTIONS ||--o{ AUDIT_LOGS : logged_with
+    RECOMMENDATIONS ||--o{ AUDIT_LOGS : acted_upon_in

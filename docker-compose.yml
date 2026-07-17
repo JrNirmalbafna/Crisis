@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  helios-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: helios-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - helios-data:/app/data
+      - helios-mlruns:/app/ml/mlruns
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=False
+      - DATABASE_URL=sqlite:///./data/helios.db
+      - MLFLOW_TRACKING_URI=sqlite:///./ml/mlruns/mlflow.db
+    restart: unless-stopped
+
+  # Placeholder for future frontend
+  # helios-frontend:
+  #   image: node:18-alpine
+  #   container_name: helios-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - helios-backend
+
+volumes:
+  helios-data:
+  helios-mlruns:

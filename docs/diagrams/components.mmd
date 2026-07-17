@@ -1,0 +1,102 @@
+classDiagram
+    class PipelineOrchestrator {
+        +run(trigger_type) PipelineRun
+        +execute_detection_pipeline()
+        +handle_partial_failure()
+    }
+
+    class IngestionService {
+        +fetch_aditya()
+        +fetch_soho()
+        +fetch_dscovr()
+        +fetch_goes()
+        +normalize_stream()
+        +register_time_series_meta()
+    }
+
+    class FusionService {
+        +compute_reliability(sat_id, t) float
+        +compute_recency(sat_id, t) float
+        +compute_spatial_relevance(sat_id) float
+        +fuse_streams(parameter, t) FusedValue
+        +persist_snapshot()
+    }
+
+    class RecoveryService {
+        +detect_gaps(stream) list
+        +predict_missing(gap) RecoveredSegment
+        +score_confidence() float
+    }
+
+    class DetectionService {
+        +detect_events(fused_stream) list~Event~
+        +classify_event_type() str
+        +generate_timeline() EventTimeline
+    }
+
+    class PredictionService {
+        +predict_arrival(event) Prediction
+        +predict_intensity(event) Prediction
+        +predict_impact_probability(event) Prediction
+        +build_consensus(predictions) Prediction
+    }
+
+    class UQService {
+        +compute_intervals(prediction) UncertaintyEstimate
+        +reliability_score() float
+        +model_agreement() float
+    }
+
+    class ExplainabilityService {
+        +compute_feature_importance() dict
+        +generate_physics_text() str
+        +generate_nl_summary() str
+    }
+
+    class PhysicsValidationService {
+        +check_limits(event, prediction) list
+        +check_plasma_constraints() list
+        +validate_kinematic_arrival() bool
+        +gate_decision_support() ValidationResult
+    }
+
+    class DecisionSupportService {
+        +map_to_actions(event, prediction, validation) list
+        +generate_recommendations(stakeholder) list
+        +log_scientific_trace()
+    }
+
+    class EventAPI {
+        +list_events(from, to, type)
+        +get_event(id)
+    }
+
+    class DashboardClient {
+        +view_timeline()
+        +view_confidence()
+        +view_explanations()
+        +view_physics_status()
+    }
+
+    PipelineOrchestrator --> IngestionService
+    PipelineOrchestrator --> FusionService
+    PipelineOrchestrator --> RecoveryService
+    PipelineOrchestrator --> DetectionService
+    PipelineOrchestrator --> PredictionService
+    PipelineOrchestrator --> UQService
+    PipelineOrchestrator --> ExplainabilityService
+    PipelineOrchestrator --> PhysicsValidationService
+    PipelineOrchestrator --> DecisionSupportService
+
+    IngestionService --> FusionService
+    FusionService --> RecoveryService
+    RecoveryService --> DetectionService
+    DetectionService --> PredictionService
+    PredictionService --> UQService
+    PredictionService --> ExplainabilityService
+    UQService --> PredictionService : consensus input
+    ExplainabilityService --> PredictionService : consensus input
+    PredictionService --> PhysicsValidationService
+    PhysicsValidationService --> DecisionSupportService
+    DecisionSupportService --> EventAPI
+    EventAPI --> DashboardClient

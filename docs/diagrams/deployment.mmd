@@ -1,0 +1,43 @@
+flowchart TB
+    subgraph Client
+        BROWSER[Browser<br/>React Dashboard]
+    end
+
+    subgraph AppTier["Application Tier"]
+        API[FastAPI<br/>REST + WebSocket]
+        ORCH[PipelineOrchestrator<br/>Worker]
+    end
+
+    subgraph AITier["AI Tier"]
+        INF1[Detector Inference]
+        INF2[Prediction Inference]
+        INF3[UQ Inference]
+        INF4[Explainability Inference]
+        MODELS[(Model Artifacts<br/>ONNX / PyTorch)]
+    end
+
+    subgraph DataTier["Data Tier"]
+        PG[(PostgreSQL 14+<br/>15-table schema)]
+        S3[(Object Storage<br/>Parquet / CDF)]
+        TSDB[(TimescaleDB / InfluxDB<br/>optional hot TS)]
+    end
+
+    subgraph External["External Sources"]
+        ISRO[Aditya-L1 feeds]
+        NASA[SOHO · DSCOVR · ACE]
+        NOAA[GOES · CDAW catalogs]
+    end
+
+    BROWSER <-->|HTTPS / WSS| API
+    API --> PG
+    API --> ORCH
+    ORCH --> INF1 & INF2 & INF3 & INF4
+    INF1 & INF2 & INF3 & INF4 --> MODELS
+    ORCH --> PG
+    ORCH --> S3
+    ORCH --> TSDB
+
+    ISRO & NASA & NOAA -->|connectors| ORCH
+
+    style PG fill:#e8f4fd,stroke:#2b6cb0
+    style ORCH fill:#fef9e8,stroke:#b7791f

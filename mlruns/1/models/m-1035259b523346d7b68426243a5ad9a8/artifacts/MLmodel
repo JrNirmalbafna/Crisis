@@ -1,0 +1,22 @@
+artifact_path: file:D:/New folder/helios-intelligence/mlruns/1/models/m-1035259b523346d7b68426243a5ad9a8/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.13.2
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBRegressor
+    model_format: ubj
+    xgb_version: 3.3.0
+mlflow_version: 3.11.1
+model_id: m-1035259b523346d7b68426243a5ad9a8
+model_size_bytes: 229927
+model_uuid: m-1035259b523346d7b68426243a5ad9a8
+prompts: null
+run_id: 7488117aab604f3fa5722c4aa7d5c31f
+utc_time_created: '2026-07-17 19:12:09.123838'

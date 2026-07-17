@@ -1,0 +1,12 @@
+.git/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.db
+ml/mlruns/
+ml/data/
+*.onnx
+!ml/models/*.onnx

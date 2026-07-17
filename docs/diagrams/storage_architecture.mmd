@@ -1,0 +1,47 @@
+flowchart LR
+    subgraph Spacecraft
+        A1[Aditya-L1]
+        A2[SOHO]
+        A3[DSCOVR]
+        A4[GOES]
+        A5[ACE / WIND]
+    end
+
+    subgraph Ingestion
+        I1[Data Connectors]
+    end
+
+    subgraph BulkStorage["Bulk Storage Layer"]
+        PARQ[Parquet / CDF<br/>Object Storage]
+        TSDB[InfluxDB / TimescaleDB<br/>optional hot TSDB]
+    end
+
+    subgraph Postgres["PostgreSQL — 15 Tables (Canonical)"]
+        direction TB
+        META[satellites · instruments<br/>time_series_meta]
+        PIPE[pipeline_runs · fusion_snapshots]
+        EVT[events · event_observations]
+        AI[model_runs · predictions<br/>uncertainty_estimates · explanations]
+        GATE[physics_validation_results]
+        DSS[users · recommendations · audit_logs]
+    end
+
+    subgraph Consumers
+        API[REST / WebSocket API]
+        UI[Event Intelligence Dashboard]
+    end
+
+    A1 & A2 & A3 & A4 & A5 --> I1
+    I1 --> PARQ
+    I1 --> TSDB
+    PARQ --> META
+    TSDB --> META
+
+    META --> PIPE
+    PIPE --> EVT
+    EVT --> AI
+    AI --> GATE
+    GATE --> DSS
+    DSS --> API
+    API --> UI
+    GATE --> UI

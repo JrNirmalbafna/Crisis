@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*":          ["./src/*"],
+      "@components/*":["./src/components/*"],
+      "@pages/*":     ["./src/pages/*"],
+      "@layouts/*":   ["./src/layouts/*"],
+      "@hooks/*":     ["./src/hooks/*"],
+      "@services/*":  ["./src/services/*"],
+      "@utils/*":     ["./src/utils/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@store/*":     ["./src/store/*"],
+      "@router/*":    ["./src/router/*"],
+      "@contexts/*":  ["./src/contexts/*"],
+      "@styles/*":    ["./src/styles/*"],
+      "@assets/*":    ["./src/assets/*"]
+    }
+  },
+  "include": ["src"]
+}

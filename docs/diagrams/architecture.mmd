@@ -1,0 +1,63 @@
+flowchart LR
+    subgraph Sources["Layer 1 — Data Sources"]
+        A1[Aditya-L1<br/>SWIS / VELC]
+        A2[SOHO<br/>LASCO]
+        A3[DSCOVR<br/>Plasma]
+        A4[GOES<br/>X-ray]
+        A5[ACE / WIND<br/>Solar Wind]
+    end
+
+    subgraph DataIntel["Layer 2 — Data Intelligence"]
+        I1[IngestionService<br/>Module 2]
+        I2[Time Sync & Resampling]
+        I3[Cross-Satellite Validation]
+        F1[FusionService<br/>Module 3]
+        R1[RecoveryService<br/>Module 4]
+    end
+
+    subgraph AIEngine["Layer 3 — AI Engine"]
+        D1[DetectionService<br/>Module 1]
+        P1[PredictionService<br/>Module 5]
+        U1[UQService<br/>Module 6]
+        E1[ExplainabilityService<br/>Module 7]
+        C1[ConsensusInference<br/>Module 8]
+    end
+
+    subgraph Trust["Layer 4 — Trust & Validation"]
+        PHY{{PhysicsValidationService<br/>Module 9<br/>GATEKEEPER}}
+    end
+
+    subgraph DSS["Layer 5 — Decision Support"]
+        DS1[DecisionSupportService<br/>Module 10]
+    end
+
+    subgraph UI["Layer 6 — Presentation"]
+        API[FastAPI REST / WS]
+        DASH[Event Intelligence Dashboard<br/>Module 11]
+    end
+
+    subgraph Storage["Hybrid Storage"]
+        PG[(PostgreSQL<br/>15 tables)]
+        OBJ[(Parquet / CDF<br/>Object Store)]
+    end
+
+    A1 & A2 & A3 & A4 & A5 --> I1
+    I1 --> I2 --> I3 --> F1 --> R1
+    R1 --> D1
+    D1 --> P1
+    P1 --> U1
+    P1 --> E1
+    U1 --> C1
+    E1 --> C1
+    C1 --> PHY
+    PHY --> DS1
+    DS1 --> API --> DASH
+
+    F1 -.-> PG
+    D1 -.-> PG
+    P1 -.-> PG
+    PHY -.-> PG
+    DS1 -.-> PG
+    I1 -.-> OBJ
+
+    style PHY fill:#fde8f0,stroke:#c41e6a,stroke-width:3px

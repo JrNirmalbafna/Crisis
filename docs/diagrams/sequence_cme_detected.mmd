@@ -1,0 +1,46 @@
+sequenceDiagram
+    autonumber
+    participant ORCH as PipelineOrchestrator
+    participant FUS as FusionService
+    participant DET as DetectionService
+    participant PRED as PredictionService
+    participant UQ as UQService
+    participant EXP as ExplainabilityService
+    participant CONS as Consensus
+    participant PHYS as PhysicsValidationService
+    participant DSS as DecisionSupportService
+    participant DB as PostgreSQL
+    participant UI as Dashboard
+
+    ORCH->>DB: INSERT pipeline_runs (status=running)
+    ORCH->>FUS: fuse_streams(bulk_speed, t₀)
+    FUS->>DB: INSERT fusion_snapshots
+
+    ORCH->>DET: detect_events(fused_stream)
+    DET->>DB: INSERT events (HALO_CME, confidence=0.92)
+    DET->>DB: INSERT event_observations
+
+    ORCH->>PRED: predict_arrival(event)
+    PRED->>DB: INSERT predictions (per model)
+
+    par UQ and Explainability
+        ORCH->>UQ: compute_intervals(predictions)
+        UQ->>DB: INSERT uncertainty_estimates (draft)
+        ORCH->>EXP: generate_explanations(predictions)
+        EXP->>DB: INSERT explanations
+    end
+
+    ORCH->>CONS: build_consensus(predictions, uq, exp)
+    CONS->>DB: INSERT predictions (is_consensus=true)
+
+    ORCH->>PHYS: validate(consensus_prediction)
+    PHYS->>PHYS: PHY-10, PHY-11, PHY-14 → PASS
+    PHYS->>DB: INSERT physics_validation_results (PASS, automation_allowed=true)
+
+    ORCH->>DSS: generate_recommendations(event, validated_prediction)
+    DSS->>DB: INSERT recommendations (satellite_ops, increase_monitoring)
+    DSS->>DB: INSERT audit_logs (pipeline_completed)
+
+    ORCH->>DB: UPDATE pipeline_runs (status=success)
+    UI->>DB: GET /events/{id} + provenance chain
+    UI-->>UI: Render timeline, UQ bands, validated badge

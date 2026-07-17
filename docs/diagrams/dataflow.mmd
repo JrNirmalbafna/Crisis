@@ -1,0 +1,36 @@
+flowchart TD
+    RAW[Multi-Satellite Data Streams<br/>CDF · APIs · Catalogs]
+    STD[Standardization<br/>units · UTC · resampling]
+    QF[Quality Flags & Gaps<br/>outlier · noise · instrument status]
+    FUS[Adaptive Fusion<br/>w_i = αR + βQ + γS]
+    REC[Missing Data Recovery<br/>cross-sat reconstruction]
+    DET[Event Detection<br/>CME · Flare · HSS · SEP]
+    PRED[Prediction Engine<br/>arrival · intensity · impact prob]
+    UQ[Uncertainty Quantification<br/>PI · reliability · agreement]
+    EXP[Explainability<br/>SHAP · physics text · NL summary]
+    CONS[AI Consensus<br/>multi-model distributions]
+    PHYS{{Physics Validation<br/>PHY-01 … PHY-52}}
+    DSS[Decision Support<br/>stakeholder actions]
+    UI[Dashboard + API + Audit Logs]
+
+    RAW --> STD --> QF --> FUS --> REC --> DET --> PRED
+    PRED --> UQ
+    PRED --> EXP
+    UQ --> CONS
+    EXP --> CONS
+    CONS --> PHYS
+    PHYS -->|PASS / SOFT_FAIL| DSS
+    PHYS -->|HARD_FAIL — advisory only| DSS
+    DSS --> UI
+    PHYS --> UI
+
+    FUS -.->|fusion_snapshots| DB[(PostgreSQL)]
+    DET -.->|events| DB
+    PRED -.->|predictions| DB
+    UQ -.->|uncertainty_estimates| DB
+    EXP -.->|explanations| DB
+    PHYS -.->|physics_validation_results| DB
+    DSS -.->|recommendations · audit_logs| DB
+    RAW -.->|time_series_meta| OBJ[(Object Store / TSDB)]
+
+    style PHYS fill:#fde8f0,stroke:#c41e6a,stroke-width:3px
