@@ -3,12 +3,24 @@ import { useNavigate } from "react-router-dom";
 import { Sun, ArrowRight, Satellite, BrainCircuit, Zap } from "lucide-react";
 import { ROUTES, APP_META } from "../../constants/constants";
 import { AboutSatellitesSection } from "../../components/satellite/AboutSatellitesSection";
+// Removed StarrySky import
 
 export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
     <div className="flex flex-col relative overflow-x-hidden bg-bg-base min-h-screen">
+      {/* ── Background Elements ──────────────────────────────────────────────── */}
+      <video
+        src="/star-field.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-70"
+        style={{ filter: "blur(0px) brightness(0.9)", transform: "scale(1.05)" }}
+      />
+      
       {/* Background radial glow — spans the entire page */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -17,7 +29,7 @@ export default function LandingPage() {
             "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6,182,212,0.08) 0%, transparent 60%)",
         }}
       />
-      <div className="bg-dot-grid absolute inset-0 opacity-60 pointer-events-none" />
+      <div className="bg-dot-grid absolute inset-0 opacity-40 pointer-events-none" />
 
       {/* ── 1. Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -135,32 +147,94 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── 2. Why CME Matters (placeholder) ─────────────────────────────────── */}
-      <section className="relative w-full py-24 z-10 flex items-center justify-center border-t border-white/5">
-        <h2 className="text-3xl text-white/40 font-bold">[Why CME Matters — Coming Soon]</h2>
-      </section>
+      {/* ── 2. Why CME Matters ─────────────────────────────────────────────── */}
+      <motion.section 
+        className="relative w-full py-32 z-10 flex flex-col items-center justify-center border-t border-white/5 bg-[#020617]/40"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <div className="max-w-4xl px-6 text-center">
+          <h2 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-400 mb-6 tracking-tight">
+            The Invisible Threat to Modern Civilization
+          </h2>
+          <p className="text-lg md:text-xl text-slate-400 font-light leading-relaxed mb-12">
+            Coronal Mass Ejections (CMEs) are massive bursts of solar wind and magnetic fields rising above the solar corona. When directed toward Earth, these billion-ton clouds of plasma can travel at millions of miles per hour, compressing our magnetosphere and triggering devastating geomagnetic storms capable of crippling global power grids, disabling satellites, and plunging continents into darkness.
+          </p>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 text-slate-500 font-mono text-sm">
+            <div className="flex flex-col items-center"><span className="text-cyan-400 text-4xl font-bold mb-2">~10%</span>Probability per decade</div>
+            <div className="flex flex-col items-center"><span className="text-red-400 text-4xl font-bold mb-2">$2.6T</span>Potential Economic Loss</div>
+            <div className="flex flex-col items-center"><span className="text-amber-400 text-4xl font-bold mb-2">15-72h</span>Average Strike Time</div>
+          </div>
+        </div>
+      </motion.section>
 
-      {/* ── 3. How Platform Works (placeholder) ──────────────────────────────── */}
-      <section className="relative w-full py-24 z-10 flex items-center justify-center border-t border-white/5">
-        <h2 className="text-3xl text-white/40 font-bold">[How Platform Works — Coming Soon]</h2>
-      </section>
+      {/* ── 3. How Platform Works ──────────────────────────────────────────── */}
+      <motion.section 
+        className="relative w-full py-32 z-10 flex flex-col items-center justify-center border-t border-white/5"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <div className="max-w-5xl px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-100 mb-4 tracking-tight">Bayesian Fusion Intelligence</h2>
+            <p className="text-slate-400 text-lg">Machine learning proposes; physics disposes; decision support acts only on validated outputs.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { title: "Multi-Satellite Ingestion", desc: "Real-time telemetry streams from L1 Lagrange point observatories (DSCOVR, ACE, WIND, SOHO) are ingested simultaneously to ensure zero blind spots." },
+              { title: "Dynamic Weighting", desc: "Our AI algorithm continuously analyzes sensor noise, latency, and spatial relevance, dynamically re-weighting satellite trust scores to isolate the cleanest signal." },
+              { title: "Physics Validation", desc: "All neural network predictions are cross-checked against fundamental heliophysics constraints to eliminate hallucinations and guarantee scientific accuracy." }
+            ].map((feature, i) => (
+              <div key={i} className="bg-[#020617]/60 border border-white/5 rounded-2xl p-8 backdrop-blur-md hover:bg-slate-800/40 transition-colors shadow-2xl">
+                <div className="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold mb-6 font-mono">0{i + 1}</div>
+                <h3 className="text-xl font-bold text-slate-200 mb-3">{feature.title}</h3>
+                <p className="text-slate-400 leading-relaxed text-sm">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
 
       {/* ── 4. About the Satellites ───────────────────────────────────────────── */}
-      <AboutSatellitesSection />
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1 }}
+      >
+        <AboutSatellitesSection />
+      </motion.div>
 
-      {/* ── 5. Platform Features (placeholder) ───────────────────────────────── */}
-      <section className="relative w-full py-24 z-10 flex items-center justify-center border-t border-white/5">
-        <h2 className="text-3xl text-white/40 font-bold">[Platform Features — Coming Soon]</h2>
-      </section>
 
-      {/* ── 6. System Architecture Preview (placeholder) ──────────────────────── */}
-      <section className="relative w-full py-24 z-10 flex items-center justify-center border-t border-white/5">
-        <h2 className="text-3xl text-white/40 font-bold">[System Architecture — Coming Soon]</h2>
-      </section>
 
       {/* ── 7. Footer ─────────────────────────────────────────────────────────── */}
-      <footer className="relative w-full py-12 z-10 flex items-center justify-center border-t border-white/10 bg-black/40">
-        <p className="text-white/30 text-sm">© 2026 {APP_META.name} · Footer Placeholder</p>
+      <footer className="relative w-full py-32 z-10 flex items-center justify-center border-t border-white/10 bg-black overflow-hidden">
+        {/* Footer Video Background */}
+        <video
+          src="/footer-video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0 opacity-60 pointer-events-none"
+          style={{ filter: "blur(4px)", transform: "scale(1.05)" }}
+        />
+        
+        {/* Gradient Overlay for text readability */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#020617] via-transparent to-[#020617] pointer-events-none opacity-80" />
+
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 mb-2 shadow-[0_0_30px_rgba(6,182,212,0.5)]">
+            <Sun className="w-6 h-6 text-white" />
+          </div>
+          <p className="text-white/70 text-sm tracking-widest uppercase font-mono font-bold">© 2026 {APP_META.name}</p>
+          <p className="text-cyan-400/50 text-xs tracking-wide">AI-Powered Space Weather Intelligence</p>
+        </div>
       </footer>
     </div>
   );

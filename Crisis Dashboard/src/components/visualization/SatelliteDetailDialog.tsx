@@ -1,4 +1,3 @@
-import React from "react";
 import { AppDialog } from "../ui-custom/AppDialog";
 import { MetricGauge } from "../ui-custom/MetricGauge";
 import type { SatelliteHealth } from "../../types/types";
@@ -83,10 +82,7 @@ export function SatelliteDetailDialog({ open, onOpenChange, satellite }: Satelli
           <div className="w-48 h-32 relative">
             <MetricGauge 
               value={satellite.trustScore} 
-              max={100} 
-              unit="%" 
-              size={180} 
-              color={satellite.trustScore > 90 ? "#34d399" : satellite.trustScore > 75 ? "#fbbf24" : "#fb7185"} 
+              size="lg" 
             />
           </div>
         </div>

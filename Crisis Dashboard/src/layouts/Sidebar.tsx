@@ -16,13 +16,14 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Sun,
+  type LucideIcon,
 } from "lucide-react";
 import { useAppStore } from "../store/useAppStore";
 import { NAV_ITEMS, APP_META, ROUTES } from "../constants/constants";
 import type { NavItem } from "../constants/constants";
 
 // ── Icon registry ─────────────────────────────────────────────────────────────
-const ICON_MAP: Record<string, React.ElementType> = {
+const ICON_MAP: Record<string, LucideIcon> = {
   LayoutDashboard,
   Satellite,
   BrainCircuit,
@@ -43,7 +44,7 @@ interface NavItemRowProps {
 }
 
 function NavItemRow({ item, collapsed, onNavigate }: NavItemRowProps) {
-  const Icon = ICON_MAP[item.iconName] ?? LayoutDashboard;
+  const Icon: LucideIcon = ICON_MAP[item.iconName] ?? LayoutDashboard;
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   return (

@@ -1,0 +1,22 @@
+artifact_path: file:D:/New folder/Crisis/mlruns/1/models/m-3d83ad181f7342a7b9760f1478dca6dc/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.13.2
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBRegressor
+    model_format: ubj
+    xgb_version: 3.3.0
+mlflow_version: 3.11.1
+model_id: m-3d83ad181f7342a7b9760f1478dca6dc
+model_size_bytes: 1733419
+model_uuid: m-3d83ad181f7342a7b9760f1478dca6dc
+prompts: null
+run_id: 1d1b37a2225e4fbcaabb6fb64b0e4f72
+utc_time_created: '2026-07-20 15:16:14.603216'

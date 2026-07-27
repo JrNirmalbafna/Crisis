@@ -100,7 +100,7 @@ export const KP_THRESHOLDS = {
 // ── App Meta ──────────────────────────────────────────────────────────────────
 
 export const APP_META = {
-  name:        "Helios",
+  name:        "Crisis",
   fullName:    "CME Space Weather Intelligence Dashboard",
   version:     "1.0.0",
   description: "AI-powered Coronal Mass Ejection monitoring — Aditya-L1 · SOHO · DSCOVR · GOES",

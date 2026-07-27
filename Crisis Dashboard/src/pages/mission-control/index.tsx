@@ -1,10 +1,11 @@
-import { motion } from "framer-motion";
 import StatusCards from "./StatusCards";
-import LiveEnvironmentPanel from "./LiveEnvironmentPanel";
+import SolarCoronagraphViewer from "../../components/visualization/SolarCoronagraphViewer";
+import AuroralForecastMap from "../../components/visualization/AuroralForecastMap";
 import EventsTimeline from "./EventsTimeline";
 import SolarParametersChart from "./SolarParametersChart";
 import PredictionSummary from "./PredictionSummary";
 import ImpactSummary from "./ImpactSummary";
+import GroundMagneticsChart from "./GroundMagneticsChart";
 
 export default function MissionControlPage() {
   return (
@@ -17,10 +18,13 @@ export default function MissionControlPage() {
       {/* ── Middle Row: Live Viz & Timeline ──────────────────────────────── */}
       <section 
         aria-label="Live Environment and Timeline"
-        className="flex flex-col lg:flex-row gap-5 min-h-[400px] lg:min-h-[500px]"
+        className="flex flex-col lg:flex-row gap-5 min-h-[400px]"
       >
-        <div className="flex-[7] min-w-0 h-[400px] lg:h-auto">
-          <LiveEnvironmentPanel />
+        <div className="flex-[4] min-w-0 h-[400px] lg:h-auto">
+          <SolarCoronagraphViewer />
+        </div>
+        <div className="flex-[3] min-w-0 h-[400px] lg:h-auto">
+          <AuroralForecastMap />
         </div>
         <div className="flex-[3] min-w-0 h-[400px] lg:h-auto">
           <EventsTimeline />
@@ -30,9 +34,10 @@ export default function MissionControlPage() {
       {/* ── Bottom Row: Analytics & Impact ───────────────────────────────── */}
       <section 
         aria-label="Analytics and Impact Summaries"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5"
       >
         <SolarParametersChart />
+        <GroundMagneticsChart />
         <PredictionSummary />
         <ImpactSummary />
       </section>

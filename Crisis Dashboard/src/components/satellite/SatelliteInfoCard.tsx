@@ -1,4 +1,3 @@
-import React from "react";
 import { Satellite } from "lucide-react";
 import { GlassCard } from "../ui-custom/GlassCard";
 import { SatelliteIcon } from "./SatelliteIcon";

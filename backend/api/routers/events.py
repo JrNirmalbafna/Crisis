@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/v1/events", tags=["events"])
 
 @router.get("/", response_model=List[dict])
 async def get_events(
-    hours: int = Query(24, ge=1, le=168, description="Hours to look back"),
+    hours: int = Query(24, ge=1, le=8760, description="Hours to look back"),
     event_type: Optional[str] = Query(None, description="Filter by event type (CME, FLARE, HSS, SEP)"),
     status: Optional[str] = Query(None, description="Filter by status"),
     limit: int = Query(100, ge=1, le=1000, description="Maximum number of events"),

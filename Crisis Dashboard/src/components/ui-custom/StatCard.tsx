@@ -1,9 +1,8 @@
-import React from "react";
 import { GlassCard } from "./GlassCard";
 import { cn } from "../../utils";
 
 interface StatCardProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number; style?: React.CSSProperties }>;
   label: string;
   value: React.ReactNode;
   subtext?: string;

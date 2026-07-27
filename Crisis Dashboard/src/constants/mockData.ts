@@ -137,6 +137,7 @@ export const mockSolarParameters: SolarParameter[] = Array.from({ length: 24 }, 
     density: density,
     thermalSpeed: temp,
     energyFlux: (speed * density * temp) / 100000,
+    magneticField: isShock ? -12 + Math.random() * 4 : -2 + Math.random() * 4,
   };
 });
 
@@ -155,6 +156,7 @@ export const mockFusionResults: FusionResult[] = Array.from({ length: 12 }, (_, 
   
   return {
     timestamp: time.toISOString(),
+    parameterName: "Bz (nT)",
     individualReadings: {
       "ADITYA_L1": 420 + Math.random() * 10,
       "DSCOVR": 415 + Math.random() * 15,

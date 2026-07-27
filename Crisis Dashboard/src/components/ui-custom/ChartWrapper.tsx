@@ -31,8 +31,23 @@ export function ChartWrapper({
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleExport = () => {
-    console.log(`Exporting data for: ${title}`);
-    // Stub for CSV/PNG export
+    if (!data || data.length === 0) return;
+    const headers = Object.keys(data[0]).join(",");
+    const rows = data.map(row => 
+      Object.values(row).map(val => 
+        typeof val === 'string' ? `"${val}"` : val
+      ).join(",")
+    ).join("\n");
+    
+    const csvContent = `${headers}\n${rows}`;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${title.replace(/\s+/g, '_').toLowerCase()}_export.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const isActuallyEmpty = isEmpty || (!isLoading && data.length === 0);
@@ -98,9 +113,7 @@ export function ChartWrapper({
       <GlassCard padding="none" className={className}>
         <div className="flex flex-col h-full">
           {header}
-          <div className="flex-1 p-4 pb-2">
-            {renderContent(height)}
-          </div>
+          {renderContent(height)}
         </div>
       </GlassCard>
 
@@ -111,7 +124,7 @@ export function ChartWrapper({
         description={description}
         size="fullscreen"
       >
-        <div className="flex-1 p-4 pb-8 min-h-[400px]">
+        <div className="w-full flex-1 min-h-[60vh] h-[60vh]">
           {renderContent("100%")}
         </div>
       </AppDialog>

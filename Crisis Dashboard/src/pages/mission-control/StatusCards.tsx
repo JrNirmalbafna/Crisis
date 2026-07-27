@@ -5,6 +5,7 @@ import { getMissionStatus, getSystemStatusOverview } from "../../services/api";
 import { LoadingSkeleton } from "../../components/ui-custom/LoadingSkeleton";
 import { ErrorState } from "../../components/ui-custom/ErrorState";
 import { StatCard } from "../../components/ui-custom/StatCard";
+import { useOperational } from "../../context/OperationalContext";
 
 export default function StatusCards() {
   const { 
@@ -25,6 +26,8 @@ export default function StatusCards() {
     queryKey: ["system-status-overview"],
     queryFn: getSystemStatusOverview
   });
+
+  const { isOverrideEnabled, manualThreatLevel } = useOperational();
 
   if (isLoadingMission || isLoadingOverview) {
     return (
@@ -48,9 +51,9 @@ export default function StatusCards() {
         <StatCard
           icon={Activity}
           label="CME Status"
-          value={systemOverview.statusText}
-          subtext="Last checked 2m ago"
-          status={systemOverview.statusColor === "green" ? "success" : systemOverview.statusColor === "amber" ? "warning" : "critical"}
+          value={isOverrideEnabled ? `MANUAL: ${manualThreatLevel}` : systemOverview.statusText}
+          subtext={isOverrideEnabled ? "Operator Override Active" : "Last checked 2m ago"}
+          status={isOverrideEnabled ? (manualThreatLevel === "Normal" ? "success" : "critical") : (systemOverview.statusColor === "green" ? "success" : systemOverview.statusColor === "amber" ? "warning" : "critical")}
         />
       </motion.div>
 
@@ -88,9 +91,9 @@ export default function StatusCards() {
         <StatCard
           icon={ShieldAlert}
           label="Alert Level"
-          value={systemOverview.alertLevel}
-          subtext="Action required"
-          status={systemOverview.alertLevel === "High" || systemOverview.alertLevel === "Extreme" ? "critical" : "warning"}
+          value={isOverrideEnabled ? manualThreatLevel.toUpperCase() : systemOverview.alertLevel}
+          subtext={isOverrideEnabled ? "Forced by Operator" : "Action required"}
+          status={isOverrideEnabled ? (manualThreatLevel === "Normal" ? "success" : "critical") : (systemOverview.alertLevel === "High" || systemOverview.alertLevel === "Extreme" ? "critical" : "warning")}
         />
       </motion.div>
 

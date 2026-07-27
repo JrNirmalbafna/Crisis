@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { VIEWBOX_WIDTH, VIEWBOX_HEIGHT, SAT_POSITIONS } from "./constants";
+import { VIEWBOX_WIDTH, VIEWBOX_HEIGHT, SAT_POSITIONS, EARTH_X, EARTH_Y } from "./constants";
 import { SunEarthAxis } from "./SunEarthAxis";
 import { Sun } from "./Sun";
 import { Earth } from "./Earth";

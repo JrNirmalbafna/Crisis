@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, TrendingUp, AlertTriangle, BrainCircuit } from "lucide-react";
+import { CheckCircle2, TrendingUp, AlertTriangle } from "lucide-react";
 import { getPredictionSummary } from "../../services/api";
 import { GlassCard } from "../../components/ui-custom/GlassCard";
 import { LoadingSkeleton } from "../../components/ui-custom/LoadingSkeleton";

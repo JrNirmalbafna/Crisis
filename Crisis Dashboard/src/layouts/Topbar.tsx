@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAppStore } from "../store/useAppStore";
 import { NAV_ITEMS, APP_META } from "../constants/constants";
 import NotificationDrawer from "../components/NotificationDrawer";
+import AdvisoryExportButton from "../components/AdvisoryExportButton";
 
 export default function Topbar({ onMobileMenuClick }: { onMobileMenuClick?: () => void }) {
   const { unreadAlertCount, notificationDrawerOpen, openNotifications, closeNotifications } = useAppStore();
@@ -70,6 +71,11 @@ export default function Topbar({ onMobileMenuClick }: { onMobileMenuClick?: () =
 
         {/* ── Right: Actions ─────────────────────────────────────────────── */}
         <div className="flex items-center gap-1.5 shrink-0">
+          <AdvisoryExportButton />
+          
+          {/* Separator */}
+          <div className="w-px h-5 bg-white/[0.08] mx-1" />
+
           {/* Search — expands inline on desktop, icon-only on mobile */}
           <div className="relative flex items-center">
             <AnimatePresence initial={false}>

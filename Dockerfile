@@ -28,5 +28,10 @@ COPY . .
 # Expose the API port
 EXPOSE 8000
 
+# Setup entrypoint for DB migrations and seeding
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 # Start the FastAPI application via uvicorn
 CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

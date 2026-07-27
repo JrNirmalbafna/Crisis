@@ -25,7 +25,7 @@ export function AboutSatellitesSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-lg text-white/50 max-w-2xl"
           >
-            Meet the primary instruments feeding raw space weather telemetry into the Helios platform.
+            Meet the primary instruments feeding raw space weather telemetry into the Crisis platform.
           </motion.p>
         </div>
 

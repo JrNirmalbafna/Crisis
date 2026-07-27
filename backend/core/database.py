@@ -4,13 +4,25 @@ from loguru import logger
 
 from backend.core.config import settings
 
-engine = create_engine(
-    settings.database_url,
-    pool_pre_ping=True,
-    pool_size=settings.database_pool_size,
-    max_overflow=settings.database_max_overflow,
-    echo=settings.debug,
-)
+_is_sqlite = settings.database_url.startswith("sqlite")
+
+if _is_sqlite:
+    # SQLite does not support connection-pool arguments
+    engine = create_engine(
+        settings.database_url,
+        pool_pre_ping=True,
+        connect_args={"check_same_thread": False},
+        echo=settings.debug,
+    )
+else:
+    # PostgreSQL (production)
+    engine = create_engine(
+        settings.database_url,
+        pool_pre_ping=True,
+        pool_size=settings.database_pool_size,
+        max_overflow=settings.database_max_overflow,
+        echo=settings.debug,
+    )
 
 # expire_on_commit=False prevents DetachedInstanceError when ORM objects
 # are accessed after the session's with-block closes. Critical for all

@@ -7,7 +7,6 @@ import { LoadingSkeleton } from "../../components/ui-custom/LoadingSkeleton";
 import { ErrorState } from "../../components/ui-custom/ErrorState";
 import { EmptyState } from "../../components/ui-custom/EmptyState";
 import { GlassCard } from "../../components/ui-custom/GlassCard";
-import type { CMEEventType } from "../../types/types";
 
 // ── Badge & Icon Config ───────────────────────────────────────────────────────
 const TYPE_CONFIG: Record<string, { icon: any; color: string; bg: string }> = {

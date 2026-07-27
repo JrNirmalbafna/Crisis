@@ -3,12 +3,12 @@ import { ResponsiveContainer } from "recharts";
 import { cn } from "../../utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./Card";
 
-interface ChartWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ChartWrapperProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   title?: React.ReactNode;
   description?: React.ReactNode;
   headerAction?: React.ReactNode;
   children: React.ReactElement;
-  height?: number | string;
+  height?: number | `${number}%`;
   minHeight?: number | string;
 }
 

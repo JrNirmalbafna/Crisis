@@ -1,8 +1,8 @@
-# Helios Intelligence
+# Crisis Intelligence
 
 **Trustworthy AI Scientific Decision Support Platform for Space Weather**
 
-Helios Intelligence is a comprehensive AI-powered platform for space weather monitoring, prediction, and decision support. The system ingests multi-satellite data, fuses measurements using physics-aware algorithms, detects solar events, predicts their impact on Earth, and provides stakeholder-specific recommendations with full uncertainty quantification and physics validation.
+Crisis Intelligence is a comprehensive AI-powered platform for space weather monitoring, prediction, and decision support. The system ingests multi-satellite data, fuses measurements using physics-aware algorithms, detects solar events, predicts their impact on Earth, and provides stakeholder-specific recommendations with full uncertainty quantification and physics validation.
 
 ## 🎯 Core Philosophy
 

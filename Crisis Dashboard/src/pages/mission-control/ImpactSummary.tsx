@@ -7,6 +7,13 @@ import { ErrorState } from "../../components/ui-custom/ErrorState";
 import type { Severity } from "../../types/types";
 
 function buildDomains(data: Awaited<ReturnType<typeof getImpactSummary>>) {
+  if (!data) return {
+    satelliteRisk: "low" as const,
+    powerGridRisk: "low" as const,
+    airlinesRisk: "low" as const,
+    gpsRisk: "low" as const,
+    astronautRisk: "low" as const,
+  };
   return {
     satelliteRisk: data.satelliteRisk,
     powerGridRisk:  data.powerGridRisk,

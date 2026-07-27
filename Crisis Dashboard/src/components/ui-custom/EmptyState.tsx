@@ -1,8 +1,7 @@
-import React from "react";
 import { cn } from "../../utils";
 
 interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number; style?: React.CSSProperties }>;
   title: string;
   description?: string;
   action?: React.ReactNode;

@@ -1,32 +1,67 @@
 version: '3.8'
 
 services:
+  # ── PostgreSQL Database ────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: helios-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-helios_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-helios_password}
+      POSTGRES_DB: ${POSTGRES_DB:-helios}
+    volumes:
+      - helios-pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-helios_user} -d ${POSTGRES_DB:-helios}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ────────────────────────────────────────────────────────
   helios-backend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: helios-backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
       - helios-data:/app/data
       - helios-mlruns:/app/ml/mlruns
+      - helios-logs:/app/logs
     environment:
       - ENVIRONMENT=production
       - DEBUG=False
-      - DATABASE_URL=sqlite:///./data/helios.db
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-helios_user}:${POSTGRES_PASSWORD:-helios_password}@postgres:5432/${POSTGRES_DB:-helios}
       - MLFLOW_TRACKING_URI=sqlite:///./ml/mlruns/mlflow.db
-    restart: unless-stopped
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost,http://localhost:80}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - SEED_DATABASE=${SEED_DATABASE:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-  # Placeholder for future frontend
-  # helios-frontend:
-  #   image: node:18-alpine
-  #   container_name: helios-frontend
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - helios-backend
+  # ── React / Vite Frontend (Nginx) ─────────────────────────────────────────
+  helios-frontend:
+    build:
+      context: ./Crisis Dashboard
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000/api/v1}
+    container_name: helios-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - helios-backend
 
 volumes:
+  helios-pgdata:
   helios-data:
   helios-mlruns:
+  helios-logs:

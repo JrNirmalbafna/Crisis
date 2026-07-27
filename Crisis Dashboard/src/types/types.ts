@@ -6,7 +6,7 @@
 
 export type Severity = "low" | "medium" | "high" | "critical";
 export type AlertLevel = "Normal" | "Elevated" | "High" | "Extreme";
-export type ValidationStatus = "Passed" | "Flagged" | "Failed";
+export type ValidationStatus = "Passed" | "Flagged" | "Failed" | "N/A";
 export type SystemHealth = "healthy" | "degraded" | "outage";
 export type CMEStatus = "incoming" | "active" | "passed" | "archived";
 export type CMEEventType = "Halo CME" | "Solar Flare" | "Solar Wind" | "SEP" | "CIR";
@@ -111,6 +111,8 @@ export interface SolarParameter {
   speed: number;
   /** Proton density in p/cm³ */
   density: number;
+  /** Magnetic Field (Bz) in nT */
+  magneticField: number;
   /** Thermal speed in km/s */
   thermalSpeed: number;
   /** Energy flux */
@@ -145,6 +147,7 @@ export interface SatelliteHealth {
 
 export interface FusionResult {
   timestamp: string; // ISO-8601
+  parameterName: string;
   /** Map of satellite ID to its individual measurement */
   individualReadings: Record<string, number>;
   /** The final fused/consensus value */
