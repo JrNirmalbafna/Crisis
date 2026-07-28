@@ -133,16 +133,17 @@ class UQService:
         
         # Estimate uncertainty standard deviation
         # In production, this would come from model uncertainty estimation
-        uncertainty_std = prediction.predicted_value * 0.15  # 15% uncertainty
+        val = float(prediction.predicted_value)
+        uncertainty_std = val * 0.15  # 15% uncertainty
         
         # Compute predictive intervals
         lower_90, upper_90 = self.quantifier.compute_predictive_interval(
-            prediction.predicted_value,
+            val,
             uncertainty_std,
             0.90
         )
         lower_95, upper_95 = self.quantifier.compute_predictive_interval(
-            prediction.predicted_value,
+            val,
             uncertainty_std,
             0.95
         )
@@ -158,7 +159,7 @@ class UQService:
         # Compute reliability score
         if historical_errors:
             reliability = self.quantifier.compute_reliability_score(
-                prediction.predicted_value,
+                val,
                 None,  # Actual not available at prediction time
                 historical_errors
             )

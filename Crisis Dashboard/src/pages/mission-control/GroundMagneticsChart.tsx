@@ -29,8 +29,8 @@ export default function GroundMagneticsChart() {
       className="h-full relative min-h-[300px]"
     >
       <ChartWrapper
-        title="Ground Magnetics"
-        description="Planetary K-index (1m)"
+        title="Ground Magnetics (Current Ambient)"
+        description="Live Ambient Kp Index from NOAA Magnetometers · Note: Forecasted Peak G5 Kp=9.0 applies at CME Arrival (+42h)"
         data={data}
         isLoading={isLoading}
         isEmpty={isError || (data && data.length === 0)}

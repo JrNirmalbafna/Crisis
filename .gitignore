@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large ML data files (> 100 MB GitHub limit)
+ml/data/*.dat
+ml/data/*.csv
+*.dat
+
+# Databases & local logs
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# Node & Frontend Build
+node_modules/
+dist/
+.env
+.env.local
+
+# IDE & System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

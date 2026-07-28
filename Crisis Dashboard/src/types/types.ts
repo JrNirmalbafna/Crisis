@@ -11,7 +11,7 @@ export type SystemHealth = "healthy" | "degraded" | "outage";
 export type CMEStatus = "incoming" | "active" | "passed" | "archived";
 export type CMEEventType = "Halo CME" | "Solar Flare" | "Solar Wind" | "SEP" | "CIR";
 export type ModelName = "helios-consensus" | "lstm-ensemble" | "physics-based" | "empirical";
-export type SatelliteId = "ADITYA_L1" | "SOHO" | "DSCOVR" | "GOES";
+export type SatelliteId = "ADITYA_L1" | "SOHO" | "DSCOVR" | "GOES" | "ACE" | "WIND" | "STEREO_A" | "SDO" | (string & {});
 export type SatelliteStatus = "nominal" | "warning" | "critical" | "inactive";
 
 // ── System & Mission Status ─────────────────────────────────────────────────
@@ -34,6 +34,12 @@ export interface SystemStatusOverview {
   physicsValidation: ValidationStatus;
   /** 0-100 percentage representing AI model confidence */
   aiConfidence: number;
+  cmeSpeedKmS?: number;
+  activeEventId?: string;
+  swpcScale?: string;
+  ensembleModelCount?: number;
+  activeSatellitesList?: string[];
+  physicsLawsVerified?: string;
 }
 
 // ── CME Events ──────────────────────────────────────────────────────────────
@@ -51,7 +57,7 @@ export interface CMEEvent {
   /** Angular width in degrees */
   angularWidth?: number;
   /** Source satellite IDs */
-  sources: SatelliteId[];
+  sources: (SatelliteId | string)[];
   /** Confidence score 0–1 */
   confidence: number;
   description?: string;
