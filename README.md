@@ -143,6 +143,6 @@ Runs diagnostic checks across all REST endpoints:
 
 ---
 
-## 📜 License & Citation
+## 🛰️ Project Status & Attribution
 
-Licensed under the MIT License. Developed for scientific research, space weather hazard mitigation, and aerospace decision support.
+Developed for scientific research, space weather hazard mitigation, and aerospace decision support.
