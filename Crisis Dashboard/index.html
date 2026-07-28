@@ -2,11 +2,83 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- ── Favicon & App Icons ─────────────────────────────────────────── -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- ── Viewport & Theme ────────────────────────────────────────────── -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Crisis — CME Space Weather Intelligence Dashboard</title>
-    <meta name="description" content="AI-powered Coronal Mass Ejection monitoring platform. Real-time solar wind data from Aditya-L1, SOHO, DSCOVR, and GOES satellites with geomagnetic storm predictions." />
     <meta name="theme-color" content="#030712" />
+
+    <!-- ── Primary SEO ─────────────────────────────────────────────────── -->
+    <title>Crisis — AI-Powered CME Space Weather Intelligence Dashboard</title>
+    <meta name="description" content="Crisis is an AI-powered real-time Coronal Mass Ejection (CME) monitoring and geomagnetic storm prediction platform. Live solar wind data from Aditya-L1, SOHO, DSCOVR, ACE, and GOES satellites with probabilistic impact forecasting." />
+    <meta name="keywords" content="CME, Coronal Mass Ejection, space weather, geomagnetic storm, solar flare, Aditya-L1, DSCOVR, SOHO, GOES, NOAA, SWPC, solar wind, G5 storm, Kp index, real-time solar data, space weather dashboard, AI space weather" />
+    <meta name="author" content="Crisis Space Weather Intelligence" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.crisis-spaceweather.com/" />
+
+    <!-- ── Open Graph (Facebook / LinkedIn / WhatsApp preview cards) ───── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.crisis-spaceweather.com/" />
+    <meta property="og:title" content="Crisis — AI-Powered CME Space Weather Intelligence Dashboard" />
+    <meta property="og:description" content="Real-time solar storm monitoring powered by AI. Track CMEs, solar flares, and geomagnetic storm impacts from Aditya-L1, DSCOVR, SOHO, ACE & GOES satellites." />
+    <meta property="og:image" content="https://www.crisis-spaceweather.com/og-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Crisis Space Weather Dashboard showing live solar coronagraph and mission control panels" />
+    <meta property="og:site_name" content="Crisis Space Weather Intel" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- ── Twitter / X Cards ───────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://www.crisis-spaceweather.com/" />
+    <meta name="twitter:title" content="Crisis — AI-Powered CME Space Weather Intelligence" />
+    <meta name="twitter:description" content="Real-time solar storm monitoring powered by AI. Track CMEs, solar flares, and geomagnetic storm impacts from Aditya-L1, DSCOVR, SOHO, ACE & GOES satellites." />
+    <meta name="twitter:image" content="https://www.crisis-spaceweather.com/og-preview.png" />
+    <meta name="twitter:image:alt" content="Crisis Space Weather Dashboard — Mission Control" />
+
+    <!-- ── Structured Data (JSON-LD for Google rich results) ───────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Crisis — CME Space Weather Intelligence Dashboard",
+      "description": "AI-powered real-time Coronal Mass Ejection monitoring and geomagnetic storm prediction platform with live data from Aditya-L1, SOHO, DSCOVR, ACE, and GOES satellites.",
+      "url": "https://www.crisis-spaceweather.com/",
+      "applicationCategory": "ScienceApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "Crisis Space Weather Intelligence",
+        "url": "https://www.crisis-spaceweather.com/"
+      },
+      "keywords": "CME, space weather, geomagnetic storm, solar flare, Aditya-L1, DSCOVR, SOHO, real-time solar monitoring",
+      "screenshot": "https://www.crisis-spaceweather.com/og-preview.png",
+      "featureList": [
+        "Real-time CME detection and tracking",
+        "AI-powered geomagnetic storm prediction",
+        "Live SOHO LASCO coronagraph imagery",
+        "Aditya-L1 solar observatory data",
+        "NOAA SWPC alert integration",
+        "Aurora forecast probability maps",
+        "Satellite health telemetry monitoring"
+      ]
+    }
+    </script>
+
+    <!-- ── Performance Hints ────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://services.swpc.noaa.gov" />
+    <link rel="dns-prefetch" href="https://soho.nascom.nasa.gov" />
+    <link rel="dns-prefetch" href="https://sdo.gsfc.nasa.gov" />
   </head>
   <body>
     <div id="root"></div>
