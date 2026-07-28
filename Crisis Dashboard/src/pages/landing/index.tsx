@@ -75,16 +75,15 @@ export default function LandingPage() {
         >
           {/* Logo */}
           <motion.div
-            className="flex items-center justify-center w-20 h-20 rounded-3xl mb-8 mx-auto overflow-hidden"
+            className="flex items-center justify-center w-20 h-20 rounded-3xl mb-8 mx-auto"
             style={{
-              background: "linear-gradient(135deg, #0f172a 0%, #0284c7 100%)",
-              boxShadow: "0 0 60px rgba(56,189,248,0.4), 0 0 120px rgba(56,189,248,0.15)",
-              border: "1px solid rgba(56,189,248,0.3)"
+              background: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)",
+              boxShadow: "0 0 60px rgba(59,130,246,0.4), 0 0 120px rgba(59,130,246,0.15)",
             }}
-            animate={{ boxShadow: ["0 0 40px rgba(56,189,248,0.3)", "0 0 80px rgba(56,189,248,0.5)", "0 0 40px rgba(56,189,248,0.3)"] }}
+            animate={{ boxShadow: ["0 0 40px rgba(59,130,246,0.3)", "0 0 80px rgba(59,130,246,0.5)", "0 0 40px rgba(59,130,246,0.3)"] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <img src="/favicon.svg" alt="Crisis Logo" className="w-12 h-12 object-contain" />
+            <Sun className="w-10 h-10 text-white" />
           </motion.div>
 
           {/* Badge */}
@@ -106,9 +105,7 @@ export default function LandingPage() {
           <p className="text-lg text-white/50 mb-3 font-light leading-relaxed">
             {APP_META.description}
           </p>
-          <p className="text-sm text-white/30 mb-10 font-mono tracking-wide">
-            Aditya-L1 · SOHO · DSCOVR · GOES
-          </p>
+
 
           {/* CTA */}
           <motion.button
@@ -230,7 +227,9 @@ export default function LandingPage() {
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#020617] via-transparent to-[#020617] pointer-events-none opacity-80" />
 
         <div className="relative z-10 flex flex-col items-center gap-4">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 mb-2 shadow-[0_0_30px_rgba(6,182,212,0.5)]">
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl mb-2 shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+            style={{ background: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)" }}
+          >
             <Sun className="w-6 h-6 text-white" />
           </div>
           <p className="text-white/70 text-sm tracking-widest uppercase font-mono font-bold">© 2026 {APP_META.name}</p>

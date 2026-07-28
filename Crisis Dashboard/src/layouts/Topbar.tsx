@@ -19,8 +19,9 @@ export default function Topbar({ onMobileMenuClick }: { onMobileMenuClick?: () =
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  // Derive page title from current route path
-  const currentNav = NAV_ITEMS.find((n) => n.path === location.pathname);
+  // Derive page title — strip trailing slash so /mission-control/ matches /mission-control
+  const cleanPath = location.pathname.replace(/\/$/, "") || "/";
+  const currentNav = NAV_ITEMS.find((n) => n.path === cleanPath);
   const pageTitle = currentNav?.label ?? "Dashboard";
 
   const handleSearchOpen = () => {
