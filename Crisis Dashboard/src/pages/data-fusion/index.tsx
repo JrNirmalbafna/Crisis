@@ -164,11 +164,14 @@ export default function DataFusionPage() {
                     // Find the satellite with the highest weight
                     let bestSource = "N/A";
                     let bestWeight = 0;
+                    let confidenceVal = 0.98;
+
                     Object.entries(res.individualReadings || {}).forEach(([sat, rawWt]) => {
-                       let w = typeof rawWt === 'object' && rawWt !== null ? (rawWt as any).w : rawWt;
-                       if (typeof w === 'number' && w > 1.0) {
-                         w = 0.98; // Clamp safety so confidence never exceeds 100%
+                       if (sat === "confidence") {
+                         confidenceVal = typeof rawWt === 'number' && rawWt <= 1.0 ? rawWt : 0.98;
+                         return;
                        }
+                       const w = typeof rawWt === 'object' && rawWt !== null ? (rawWt as any).w : (typeof rawWt === 'number' && rawWt <= 1.0 ? rawWt : 0.33);
                        if (typeof w === 'number' && w > bestWeight) {
                          bestWeight = w;
                          bestSource = sat;
@@ -195,9 +198,9 @@ export default function DataFusionPage() {
                         </td>
                         <td className="p-4 text-right">
                           <div className="flex items-center justify-end gap-3">
-                            <span className="font-mono font-bold text-emerald-400">{Math.round(bestWeight * 100)}%</span>
+                            <span className="font-mono font-bold text-emerald-400">{Math.round(confidenceVal * 100)}%</span>
                             <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                              <div className="h-full bg-emerald-500" style={{ width: `${bestWeight * 100}%` }} />
+                              <div className="h-full bg-emerald-500" style={{ width: `${confidenceVal * 100}%` }} />
                             </div>
                           </div>
                         </td>
