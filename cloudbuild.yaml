@@ -1,0 +1,61 @@
+# ── Google Cloud Build configuration ─────────────────────────────────────────
+# Run: gcloud builds submit --config cloudbuild.yaml .
+
+substitutions:
+  _REGION: us-central1
+  _SERVICE: crisis-backend
+  _IMAGE: gcr.io/$PROJECT_ID/crisis-backend
+
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.cloudrun'
+      - '-t'
+      - '${_IMAGE}:$BUILD_ID'
+      - '-t'
+      - '${_IMAGE}:latest'
+      - '.'
+    timeout: '1200s'   # 20 min – PyTorch install is slow
+
+  # Step 2: Push the image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_IMAGE}']
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE}'
+      - '--image'
+      - '${_IMAGE}:$BUILD_ID'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--timeout'
+      - '300'
+      - '--concurrency'
+      - '80'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '3'
+      - '--set-env-vars'
+      - 'PYTHONPATH=/app,DEBUG=false,LOG_LEVEL=INFO'
+
+images:
+  - '${_IMAGE}:latest'
+
+timeout: '1800s'   # 30 min total build timeout

@@ -1,0 +1,58 @@
+# ── .gcloudignore ─────────────────────────────────────────────────────────────
+# Files excluded from the Cloud Build upload (keeps upload fast)
+
+.git
+.gitignore
+.dockerignore
+
+# Frontend (not needed for backend build)
+Crisis Dashboard/
+Crisis Dashboard/node_modules/
+Crisis Dashboard/dist/
+
+# Local dev artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Local DB (Cloud Run uses fresh DB per deploy)
+*.db
+*.sqlite
+*.sqlite3
+
+# ML experiment tracking (not needed in prod)
+mlruns/
+.mlflow/
+
+# Logs
+logs/
+*.log
+
+# Test files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs (not needed for runtime)
+docs/
+*.md
+
+# Environment files (use Cloud Run env vars instead)
+.env
+.env.*
+!.env.example

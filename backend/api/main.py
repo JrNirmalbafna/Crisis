@@ -66,15 +66,21 @@ app = FastAPI(
 )
 
 
-# Configure CORS
-origins = settings.cors_origins.split(",") if settings.cors_origins else []
+# Configure CORS — always allow the live Amplify frontend + any from settings
+ALWAYS_ALLOWED = [
+    "https://main.d2yima0bkh6map.amplifyapp.com",  # AWS Amplify live
+    "http://localhost:5173",                          # local Vite dev
+    "http://localhost:3000",                          # local alt port
+]
+extra_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()] if settings.cors_origins else []
+origins = list(set(ALWAYS_ALLOWED + extra_origins))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=settings.cors_allow_credentials,
-    allow_methods=settings.cors_allow_methods.split(",") if settings.cors_allow_methods else ["*"],
-    allow_headers=settings.cors_allow_headers.split(",") if settings.cors_allow_headers else ["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
