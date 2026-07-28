@@ -120,7 +120,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.44, "value": 541.2, "trust": 0.99},
                     "ACE": {"w": 0.33, "value": 543.5, "trust": 0.98},
                     "WIND": {"w": 0.23, "value": 543.8, "trust": 0.96},
-                    "confidence": 0.98
+                    "confidence": 0.942
                 }
             },
             {
@@ -132,7 +132,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.31, "value": 8.3, "trust": 0.99},
                     "ACE": {"w": 0.45, "value": 8.5, "trust": 0.98},
                     "WIND": {"w": 0.24, "value": 8.4, "trust": 0.96},
-                    "confidence": 0.99
+                    "confidence": 0.961
                 }
             },
             {
@@ -144,7 +144,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.32, "value": -4.1, "trust": 0.99},
                     "ACE": {"w": 0.28, "value": -4.3, "trust": 0.98},
                     "WIND": {"w": 0.40, "value": -4.2, "trust": 0.96},
-                    "confidence": 0.97
+                    "confidence": 0.914
                 }
             },
             {
@@ -156,7 +156,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.42, "value": 3.0, "trust": 0.99},
                     "ACE": {"w": 0.34, "value": 3.2, "trust": 0.98},
                     "WIND": {"w": 0.24, "value": 3.1, "trust": 0.96},
-                    "confidence": 0.98
+                    "confidence": 0.895
                 }
             },
             {
@@ -168,7 +168,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.30, "value": -5.7, "trust": 0.99},
                     "ACE": {"w": 0.46, "value": -5.9, "trust": 0.98},
                     "WIND": {"w": 0.24, "value": -5.8, "trust": 0.96},
-                    "confidence": 0.98
+                    "confidence": 0.928
                 }
             },
             {
@@ -180,7 +180,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.35, "value": 12.5, "trust": 0.99},
                     "ACE": {"w": 0.42, "value": 12.7, "trust": 0.98},
                     "WIND": {"w": 0.23, "value": 12.6, "trust": 0.96},
-                    "confidence": 0.99
+                    "confidence": 0.937
                 }
             },
             {
@@ -192,7 +192,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.43, "value": 185000, "trust": 0.99},
                     "ACE": {"w": 0.33, "value": 186000, "trust": 0.98},
                     "WIND": {"w": 0.24, "value": 185200, "trust": 0.96},
-                    "confidence": 0.96
+                    "confidence": 0.876
                 }
             },
             {
@@ -204,7 +204,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.32, "value": 6.10, "trust": 0.99},
                     "ACE": {"w": 0.28, "value": 6.15, "trust": 0.98},
                     "WIND": {"w": 0.40, "value": 6.12, "trust": 0.96},
-                    "confidence": 0.97
+                    "confidence": 0.903
                 }
             },
             {
@@ -216,7 +216,7 @@ async def get_latest_fusion_snapshots(
                     "DSCOVR": {"w": 0.45, "value": 2.26, "trust": 0.99},
                     "ACE": {"w": 0.32, "value": 2.30, "trust": 0.98},
                     "WIND": {"w": 0.23, "value": 2.28, "trust": 0.96},
-                    "confidence": 0.98
+                    "confidence": 0.889
                 }
             }
         ]
