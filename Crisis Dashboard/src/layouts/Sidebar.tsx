@@ -210,13 +210,14 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       >
         {/* Logo mark */}
         <div
-          className="flex items-center justify-center w-8 h-8 rounded-[10px] shrink-0"
+          className="flex items-center justify-center w-8 h-8 rounded-[10px] shrink-0 overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)",
-            boxShadow: "0 0 18px rgba(59,130,246,0.45)",
+            background: "linear-gradient(135deg, #0f172a 0%, #0284c7 100%)",
+            boxShadow: "0 0 18px rgba(56,189,248,0.45)",
+            border: "1px solid rgba(56,189,248,0.3)"
           }}
         >
-          <Sun className="text-white" style={{ width: 15, height: 15 }} />
+          <img src="/favicon.svg" alt="Crisis Logo" className="w-5 h-5 object-contain" />
         </div>
 
         {/* Wordmark */}

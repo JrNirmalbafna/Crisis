@@ -75,15 +75,16 @@ export default function LandingPage() {
         >
           {/* Logo */}
           <motion.div
-            className="flex items-center justify-center w-20 h-20 rounded-3xl mb-8 mx-auto"
+            className="flex items-center justify-center w-20 h-20 rounded-3xl mb-8 mx-auto overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)",
-              boxShadow: "0 0 60px rgba(59,130,246,0.4), 0 0 120px rgba(59,130,246,0.15)",
+              background: "linear-gradient(135deg, #0f172a 0%, #0284c7 100%)",
+              boxShadow: "0 0 60px rgba(56,189,248,0.4), 0 0 120px rgba(56,189,248,0.15)",
+              border: "1px solid rgba(56,189,248,0.3)"
             }}
-            animate={{ boxShadow: ["0 0 40px rgba(59,130,246,0.3)", "0 0 80px rgba(59,130,246,0.5)", "0 0 40px rgba(59,130,246,0.3)"] }}
+            animate={{ boxShadow: ["0 0 40px rgba(56,189,248,0.3)", "0 0 80px rgba(56,189,248,0.5)", "0 0 40px rgba(56,189,248,0.3)"] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Sun className="w-10 h-10 text-white" />
+            <img src="/favicon.svg" alt="Crisis Logo" className="w-12 h-12 object-contain" />
           </motion.div>
 
           {/* Badge */}
