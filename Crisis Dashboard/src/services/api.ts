@@ -106,7 +106,7 @@ export async function getRecentEvents(limit: number = 10): Promise<CMEEvent[]> {
       estimatedArrival: event.peak_time || undefined,
       severity: "high",
       status: event.status === "ACTIVE" ? "active" : "passed",
-      speed: event.metadata?.speed || event.metadata?.speed_km_s || undefined,
+      speed: event.metadata?.cme_speed_km_s || event.metadata?.speed || event.metadata?.speed_km_s || undefined,
       sources: event.metadata?.sources || ["DSCOVR L1", "SOHO/LASCO C3"],
       confidence: event.detection_confidence || 0.99,
       type: event.event_type === "CME" ? "Halo CME" : (event.event_type === "FLARE" ? "Solar Flare" : event.event_type),
@@ -122,14 +122,14 @@ export async function getRecentEvents(limit: number = 10): Promise<CMEEvent[]> {
       }
     }
 
-    // Sort: DB-sourced events first (they have numeric IDs), then by recency
+    // Sort: ACTIVE events first, then DB-sourced events, then by recency
     combined.sort((a, b) => {
+      if (a.status === "active" && b.status !== "active") return -1; // ACTIVE before passed
+      if (a.status !== "active" && b.status === "active") return 1;
       const aIsDb = !isNaN(parseInt(a.id, 10));
       const bIsDb = !isNaN(parseInt(b.id, 10));
       if (aIsDb && !bIsDb) return -1;  // DB events before fallback
       if (!aIsDb && bIsDb) return 1;
-      if (a.status === "active" && b.status !== "active") return -1; // ACTIVE before passed
-      if (a.status !== "active" && b.status === "active") return 1;
       return new Date(b.detectedAt).getTime() - new Date(a.detectedAt).getTime();
     });
     return combined.slice(0, limit);
