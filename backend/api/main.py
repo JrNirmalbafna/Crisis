@@ -68,6 +68,8 @@ app = FastAPI(
 
 # Configure CORS — always allow the live Amplify frontend + any from settings
 ALWAYS_ALLOWED = [
+    "https://www.crisisintel.space",              # production domain
+    "https://crisisintel.space",                   # production root
     "https://main.d2yima0bkh6map.amplifyapp.com",  # AWS Amplify live
     "http://localhost:5173",                          # local Vite dev
     "http://localhost:3000",                          # local alt port
