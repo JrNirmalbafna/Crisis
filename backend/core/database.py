@@ -4,12 +4,17 @@ from loguru import logger
 
 from backend.core.config import settings
 
-_is_sqlite = settings.database_url.startswith("sqlite")
+# Normalize postgres:// to postgresql:// (SQLAlchemy 2.0+ requires postgresql://)
+_db_url = settings.database_url
+if _db_url.startswith("postgres://"):
+    _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+
+_is_sqlite = _db_url.startswith("sqlite")
 
 if _is_sqlite:
     # SQLite does not support connection-pool arguments
     engine = create_engine(
-        settings.database_url,
+        _db_url,
         pool_pre_ping=True,
         connect_args={"check_same_thread": False},
         echo=settings.debug,
@@ -17,7 +22,7 @@ if _is_sqlite:
 else:
     # PostgreSQL (production)
     engine = create_engine(
-        settings.database_url,
+        _db_url,
         pool_pre_ping=True,
         pool_size=settings.database_pool_size,
         max_overflow=settings.database_max_overflow,
