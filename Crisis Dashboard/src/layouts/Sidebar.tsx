@@ -15,7 +15,6 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
-  Sun,
   type LucideIcon,
 } from "lucide-react";
 import { useAppStore } from "../store/useAppStore";
