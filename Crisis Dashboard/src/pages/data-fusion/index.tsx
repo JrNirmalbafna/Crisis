@@ -165,8 +165,11 @@ export default function DataFusionPage() {
                     let bestSource = "N/A";
                     let bestWeight = 0;
                     Object.entries(res.individualReadings || {}).forEach(([sat, rawWt]) => {
-                       const w = typeof rawWt === 'object' ? (rawWt as any).w : rawWt;
-                       if (w > bestWeight) {
+                       let w = typeof rawWt === 'object' && rawWt !== null ? (rawWt as any).w : rawWt;
+                       if (typeof w === 'number' && w > 1.0) {
+                         w = 0.98; // Clamp safety so confidence never exceeds 100%
+                       }
+                       if (typeof w === 'number' && w > bestWeight) {
                          bestWeight = w;
                          bestSource = sat;
                        }

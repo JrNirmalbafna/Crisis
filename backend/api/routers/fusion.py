@@ -116,35 +116,55 @@ async def get_latest_fusion_snapshots(
                 "timestamp": now_iso,
                 "parameter_name": "plasma_speed",
                 "fused_value": 542.8,
-                "weights": {"DSCOVR": 541.2, "ACE": 543.5, "WIND": 543.8, "confidence": 0.985}
+                "weights": {
+                    "DSCOVR": {"w": 0.98, "value": 541.2, "trust": 0.99},
+                    "ACE": {"w": 0.95, "value": 543.5, "trust": 0.98},
+                    "WIND": {"w": 0.92, "value": 543.8, "trust": 0.96}
+                }
             },
             {
                 "id": 2,
                 "timestamp": now_iso,
                 "parameter_name": "bt",
                 "fused_value": 8.4,
-                "weights": {"DSCOVR": 8.3, "ACE": 8.5, "WIND": 8.4, "confidence": 0.991}
+                "weights": {
+                    "DSCOVR": {"w": 0.96, "value": 8.3, "trust": 0.99},
+                    "ACE": {"w": 0.99, "value": 8.5, "trust": 0.98},
+                    "WIND": {"w": 0.94, "value": 8.4, "trust": 0.96}
+                }
             },
             {
                 "id": 3,
                 "timestamp": now_iso,
                 "parameter_name": "bz",
                 "fused_value": -4.2,
-                "weights": {"DSCOVR": -4.1, "ACE": -4.3, "WIND": -4.2, "confidence": 0.978}
+                "weights": {
+                    "DSCOVR": {"w": 0.95, "value": -4.1, "trust": 0.99},
+                    "ACE": {"w": 0.96, "value": -4.3, "trust": 0.98},
+                    "WIND": {"w": 0.98, "value": -4.2, "trust": 0.96}
+                }
             },
             {
                 "id": 4,
                 "timestamp": now_iso,
                 "parameter_name": "density",
                 "fused_value": 12.6,
-                "weights": {"DSCOVR": 12.5, "ACE": 12.7, "WIND": 12.6, "confidence": 0.982}
+                "weights": {
+                    "DSCOVR": {"w": 0.97, "value": 12.5, "trust": 0.99},
+                    "ACE": {"w": 0.99, "value": 12.7, "trust": 0.98},
+                    "WIND": {"w": 0.95, "value": 12.6, "trust": 0.96}
+                }
             },
             {
                 "id": 5,
                 "timestamp": now_iso,
                 "parameter_name": "temperature",
                 "fused_value": 185400.0,
-                "weights": {"DSCOVR": 185000, "ACE": 186000, "WIND": 185200, "confidence": 0.965}
+                "weights": {
+                    "DSCOVR": {"w": 0.96, "value": 185000, "trust": 0.99},
+                    "ACE": {"w": 0.94, "value": 186000, "trust": 0.98},
+                    "WIND": {"w": 0.95, "value": 185200, "trust": 0.96}
+                }
             }
         ]
     
