@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, CartesianGrid, Legend } from "recharts";
 import { useQuery } from "@tanstack/react-query";
@@ -6,7 +7,8 @@ import { getSolarParameters } from "../../services/api";
 import { GlassCard } from "../../components/ui-custom/GlassCard";
 import { LoadingSkeleton } from "../../components/ui-custom/LoadingSkeleton";
 import { ErrorState } from "../../components/ui-custom/ErrorState";
-import { Download } from "lucide-react";
+import { AppDialog } from "../../components/ui-custom/AppDialog";
+import { Download, Maximize2 } from "lucide-react";
 
 // ── Combined Tooltip displaying both parameters ─────────────────────────────
 const DualTooltip = ({ active, payload, label }: any) => {
@@ -46,6 +48,8 @@ const DualTooltip = ({ active, payload, label }: any) => {
 const axisTick = { fill: "#94a3b8", fontSize: 11, fontFamily: "monospace", fontVariantNumeric: "tabular-nums" } as const;
 
 export default function SolarParametersChart() {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["solar-parameters"],
     queryFn: () => getSolarParameters(),
@@ -77,145 +81,170 @@ export default function SolarParametersChart() {
     document.body.removeChild(link);
   };
 
+  const renderChart = (heightClass: string) => (
+    <div className={`w-full ${heightClass}`}>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={safeData} margin={{ top: 10, right: 5, left: -22, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.04)" vertical={false} />
+          
+          <XAxis
+            dataKey="timestamp"
+            tickFormatter={(val) => format(new Date(val), "HH:mm")}
+            tick={axisTick}
+            tickLine={false}
+            axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+            minTickGap={45}
+          />
+
+          {/* Left Axis: Speed */}
+          <YAxis
+            yAxisId="left"
+            orientation="left"
+            domain={["dataMin - 15", "dataMax + 15"]}
+            tick={axisTick}
+            tickLine={false}
+            axisLine={false}
+            width={38}
+          />
+
+          {/* Right Axis: Bz */}
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            domain={["dataMin - 2", "dataMax + 2"]}
+            tick={axisTick}
+            tickLine={false}
+            axisLine={false}
+            width={32}
+          />
+
+          <Tooltip content={<DualTooltip />} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }} />
+          
+          {/* Visual Reference Guidelines */}
+          <ReferenceLine yAxisId="right" y={0} stroke="rgba(255,255,255,0.15)" strokeDasharray="3 3" />
+          <ReferenceLine 
+            yAxisId="right" 
+            y={-10} 
+            stroke="#f43f5e" 
+            strokeOpacity={0.4} 
+            strokeDasharray="3 3"
+            label={{ value: "Storm Warning", position: "insideTopRight", fill: "#f43f5e", fontSize: 9, fontFamily: "monospace" }}
+          />
+
+          {/* Speed Line (Left Axis) */}
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dataKey="speed"
+            name="Speed (km/s)"
+            stroke="#22d3ee"
+            strokeWidth={1.5}
+            dot={false}
+            connectNulls
+            isAnimationActive={false}
+          />
+
+          {/* Bz Line (Right Axis) */}
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey="magneticField"
+            name="Bz (nT)"
+            stroke="#f43f5e"
+            strokeWidth={1.5}
+            dot={false}
+            connectNulls
+            isAnimationActive={false}
+          />
+
+          <Legend 
+            verticalAlign="top" 
+            height={36} 
+            iconType="circle"
+            iconSize={8}
+            content={({ payload }) => (
+              <div className="flex items-center justify-center gap-6 text-[10px] font-mono tracking-wider uppercase text-slate-400">
+                {payload?.map((entry: any, index: number) => (
+                  <div key={index} className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                    <span>{entry.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2, duration: 0.3 }}
-      className="h-full relative"
-    >
-      <GlassCard padding="none" className="h-full flex flex-col min-h-[300px]">
-        {/* Header */}
-        <div className="flex items-start justify-between p-5 border-b border-white/[0.04] shrink-0">
-          <div className="flex flex-col gap-1">
-            <h3 className="text-[15px] font-semibold text-white/90 leading-none">Solar Parameters</h3>
-            <p className="text-[11px] text-white/50 font-mono tracking-wide uppercase mt-0.5">
-              L1 Telemetry · Dynamic Auto-Scaled View
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="p-1.5 rounded-lg text-white/40 hover:text-white/90 hover:bg-white/[0.05] transition-colors"
-              aria-label="Export Chart"
-            >
-              <Download className="w-4 h-4" />
-            </button>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-              LIVE
-            </span>
-          </div>
-        </div>
-
-        {/* Content Body */}
-        {isLoading ? (
-          <div className="flex-1 p-5">
-            <LoadingSkeleton variant="chart" className="h-full" />
-          </div>
-        ) : isError || safeData.length === 0 ? (
-          <div className="flex-1 p-5">
-            <ErrorState title="Failed to load telemetry" onRetry={() => refetch()} />
-          </div>
-        ) : (
-          <div className="flex-1 p-5 flex flex-col justify-center">
-            {/* Fixed height chart wrapper to prevent ResponsiveContainer from collapsing to 0px */}
-            <div className="w-full h-[220px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={safeData} margin={{ top: 10, right: 5, left: -22, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                  
-                  <XAxis
-                    dataKey="timestamp"
-                    tickFormatter={(val) => format(new Date(val), "HH:mm")}
-                    tick={axisTick}
-                    tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
-                    minTickGap={45}
-                  />
-
-                  {/* Left Axis: Speed */}
-                  <YAxis
-                    yAxisId="left"
-                    orientation="left"
-                    domain={["dataMin - 15", "dataMax + 15"]}
-                    tick={axisTick}
-                    tickLine={false}
-                    axisLine={false}
-                    width={38}
-                  />
-
-                  {/* Right Axis: Bz */}
-                  <YAxis
-                    yAxisId="right"
-                    orientation="right"
-                    domain={["dataMin - 2", "dataMax + 2"]}
-                    tick={axisTick}
-                    tickLine={false}
-                    axisLine={false}
-                    width={32}
-                  />
-
-                  <Tooltip content={<DualTooltip />} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }} />
-                  
-                  {/* Visual Reference Guidelines */}
-                  <ReferenceLine yAxisId="right" y={0} stroke="rgba(255,255,255,0.15)" strokeDasharray="3 3" />
-                  <ReferenceLine 
-                    yAxisId="right" 
-                    y={-10} 
-                    stroke="#f43f5e" 
-                    strokeOpacity={0.4} 
-                    strokeDasharray="3 3"
-                    label={{ value: "Storm Warning", position: "insideTopRight", fill: "#f43f5e", fontSize: 9, fontFamily: "monospace" }}
-                  />
-
-                  {/* Speed Line (Left Axis) */}
-                  <Line
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="speed"
-                    name="Speed (km/s)"
-                    stroke="#22d3ee"
-                    strokeWidth={1.5}
-                    dot={false}
-                    connectNulls
-                    isAnimationActive={false}
-                  />
-
-                  {/* Bz Line (Right Axis) */}
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="magneticField"
-                    name="Bz (nT)"
-                    stroke="#f43f5e"
-                    strokeWidth={1.5}
-                    dot={false}
-                    connectNulls
-                    isAnimationActive={false}
-                  />
-
-                  <Legend 
-                    verticalAlign="top" 
-                    height={36} 
-                    iconType="circle"
-                    iconSize={8}
-                    content={({ payload }) => (
-                      <div className="flex items-center justify-center gap-6 text-[10px] font-mono tracking-wider uppercase text-slate-400">
-                        {payload?.map((entry: any, index: number) => (
-                          <div key={index} className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                            <span>{entry.value}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.3 }}
+        className="h-full relative"
+      >
+        <GlassCard padding="none" className="h-full flex flex-col min-h-[300px]">
+          {/* Header */}
+          <div className="flex items-start justify-between p-5 border-b border-white/[0.04] shrink-0">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-[15px] font-semibold text-white/90 leading-none">Solar Parameters</h3>
+              <p className="text-[11px] text-white/50 font-mono tracking-wide uppercase mt-0.5">
+                L1 Telemetry · Dynamic Auto-Scaled View
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleExport}
+                className="p-1.5 rounded-lg text-white/40 hover:text-white/90 hover:bg-white/[0.05] transition-colors"
+                aria-label="Export Chart"
+              >
+                <Download className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setIsFullscreen(true)}
+                className="p-1.5 rounded-lg text-white/40 hover:text-white/90 hover:bg-white/[0.05] transition-colors"
+                aria-label="View Fullscreen"
+              >
+                <Maximize2 className="w-4 h-4" />
+              </button>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                LIVE
+              </span>
             </div>
           </div>
-        )}
-      </GlassCard>
-    </motion.div>
+
+          {/* Content Body */}
+          {isLoading ? (
+            <div className="flex-1 p-5">
+              <LoadingSkeleton variant="chart" className="h-full" />
+            </div>
+          ) : isError || safeData.length === 0 ? (
+            <div className="flex-1 p-5">
+              <ErrorState title="Failed to load telemetry" onRetry={() => refetch()} />
+            </div>
+          ) : (
+            <div className="flex-1 p-5 flex flex-col justify-center">
+              {renderChart("h-[220px]")}
+            </div>
+          )}
+        </GlassCard>
+      </motion.div>
+
+      {/* Fullscreen Dialog */}
+      <AppDialog
+        open={isFullscreen}
+        onOpenChange={setIsFullscreen}
+        title="Solar Parameters Telemetry Analysis"
+        description="L1 Lagrange Point Near-Real-Time Stream"
+        size="fullscreen"
+      >
+        <div className="w-full flex-1 min-h-[60vh] h-full flex flex-col justify-center p-3">
+          {renderChart("h-[480px]")}
+        </div>
+      </AppDialog>
+    </>
   );
 }
