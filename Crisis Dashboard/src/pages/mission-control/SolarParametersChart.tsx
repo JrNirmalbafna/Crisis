@@ -84,7 +84,7 @@ export default function SolarParametersChart() {
   const renderChart = (heightClass: string) => (
     <div className={`w-full ${heightClass}`}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={safeData} margin={{ top: 10, right: 5, left: -22, bottom: 0 }}>
+        <LineChart data={safeData} margin={{ top: 15, right: 10, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.04)" vertical={false} />
           
           <XAxis
@@ -102,9 +102,10 @@ export default function SolarParametersChart() {
             orientation="left"
             domain={["dataMin - 15", "dataMax + 15"]}
             tick={axisTick}
+            tickFormatter={(val) => Math.round(val).toString()}
             tickLine={false}
             axisLine={false}
-            width={38}
+            width={45}
           />
 
           {/* Right Axis: Bz */}
@@ -113,9 +114,10 @@ export default function SolarParametersChart() {
             orientation="right"
             domain={["dataMin - 2", "dataMax + 2"]}
             tick={axisTick}
+            tickFormatter={(val) => Number(val).toFixed(1)}
             tickLine={false}
             axisLine={false}
-            width={32}
+            width={40}
           />
 
           <Tooltip content={<DualTooltip />} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }} />
