@@ -261,15 +261,15 @@ export default function DataFusionPage() {
                 </span>
               </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-y-auto max-h-[360px] overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <caption className="sr-only">Real-time Bayesian consensus physics parameters fused across L1 spacecraft with confidence scores and primary trust sources.</caption>
                 <thead>
-                  <tr className="bg-slate-800/40 text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
-                    <th className="p-4 font-semibold">Parameter</th>
-                    <th className="p-4 font-semibold">Fused Value</th>
-                    <th className="p-4 font-semibold">Primary Source</th>
-                    <th className="p-4 font-semibold text-right">Confidence</th>
+                  <tr className="bg-slate-800/40 text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-800 sticky top-0 z-10 backdrop-blur-md">
+                    <th className="p-3 font-semibold bg-slate-900/90">Parameter</th>
+                    <th className="p-3 font-semibold bg-slate-900/90">Fused Value</th>
+                    <th className="p-3 font-semibold bg-slate-900/90">Primary Source</th>
+                    <th className="p-3 font-semibold text-right bg-slate-900/90">Confidence</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/50 text-sm">
@@ -284,6 +284,18 @@ export default function DataFusionPage() {
                       temperature: "K",
                       dynamic_pressure: "nPa",
                       electric_field: "mV/m",
+                    };
+
+                    const PARAM_LABELS: Record<string, string> = {
+                      plasma_speed: "Solar Wind Speed",
+                      bt: "Total Magnetic Field (Bt)",
+                      bz: "Interplanetary Magnetic Field (Bz)",
+                      bx: "IMF Bx Component",
+                      by: "IMF By Component",
+                      density: "Proton Density",
+                      temperature: "Plasma Temperature",
+                      dynamic_pressure: "Flow Dynamic Pressure",
+                      electric_field: "Electric Field Vector",
                     };
 
                     // Find the satellite with the highest weight
@@ -301,7 +313,7 @@ export default function DataFusionPage() {
                          bestWeight = w;
                          bestSource = sat;
                        }
-                    });
+                     });
 
                     const confPercent = Math.round(confidenceVal * 1000) / 10;
                     const barColor = confPercent >= 93 ? "bg-emerald-500" : confPercent >= 90 ? "bg-cyan-500" : "bg-amber-500";
@@ -315,22 +327,29 @@ export default function DataFusionPage() {
                         key={res.parameterName} 
                         className="hover:bg-slate-800/40 transition-colors group"
                       >
-                        <td className="p-4 font-medium text-slate-300">
-                          {res.parameterName}
+                        <td className="p-3 font-medium text-slate-300">
+                          <div className="font-semibold text-slate-100">
+                            {PARAM_LABELS[res.parameterName] || res.parameterName}
+                          </div>
+                          <div className="text-[10px] text-slate-500 font-mono mt-0.5">{res.parameterName}</div>
                         </td>
-                        <td className="p-4 font-mono text-cyan-400 font-bold flex items-center gap-1.5">
-                          <span>{res.fusedValue !== null && res.fusedValue !== undefined ? Number(res.fusedValue).toFixed(4) : "N/A"}</span>
-                          {res.fusedValue !== null && res.fusedValue !== undefined && PARAM_UNITS[res.parameterName] && (
-                            <span className="text-[11px] font-sans font-normal text-slate-400 bg-slate-800/60 px-1.5 py-0.5 rounded border border-slate-700/50">
-                              {PARAM_UNITS[res.parameterName]}
-                            </span>
-                          )}
+                        <td className="p-3 font-mono text-cyan-400 font-bold">
+                          <div className="flex items-center gap-1.5">
+                            <span>{res.fusedValue !== null && res.fusedValue !== undefined ? Number(res.fusedValue).toFixed(4) : "N/A"}</span>
+                            {res.fusedValue !== null && res.fusedValue !== undefined && PARAM_UNITS[res.parameterName] && (
+                              <span className="text-[9px] font-sans font-normal text-slate-400 bg-slate-800/60 px-1 py-0.5 rounded border border-slate-700/50">
+                                {PARAM_UNITS[res.parameterName]}
+                              </span>
+                            )}
+                          </div>
                         </td>
-                        <td className="p-4 text-slate-400 flex items-center gap-2 font-medium">
-                          {bestSource !== "N/A" && <ArrowRight className="w-3 h-3 text-indigo-500 group-hover:text-indigo-400 transition-colors" />}
-                          {bestSource}
+                        <td className="p-3 text-slate-400 font-medium">
+                          <div className="flex items-center gap-1.5">
+                            {bestSource !== "N/A" && <ArrowRight className="w-3 h-3 text-indigo-500 group-hover:text-indigo-400 transition-colors" />}
+                            <span>{bestSource}</span>
+                          </div>
                         </td>
-                        <td className="p-4 text-right">
+                        <td className="p-3 text-right">
                           <div className="flex items-center justify-end gap-3">
                             <span className={`font-mono font-bold ${textColor}`}>{confPercent}%</span>
                             <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">

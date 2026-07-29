@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, CartesianGrid } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, CartesianGrid, Legend } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { getSolarParameters } from "../../services/api";
@@ -8,32 +8,37 @@ import { LoadingSkeleton } from "../../components/ui-custom/LoadingSkeleton";
 import { ErrorState } from "../../components/ui-custom/ErrorState";
 import { Download } from "lucide-react";
 
-// ── Custom synchronized tooltip shown on both panels ────────────────────────
-const SpeedTooltip = ({ active, payload, label }: any) => {
+// ── Combined Tooltip displaying both parameters ─────────────────────────────
+const DualTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
-  return (
-    <div className="bg-[#030712]/95 border border-cyan-500/20 px-3 py-2 rounded-lg text-xs font-mono shadow-2xl backdrop-blur-md">
-      <p className="text-slate-400 mb-1">{label ? format(new Date(label), "HH:mm 'UTC'") : ""}</p>
-      <p className="text-cyan-400 font-bold tabular-nums">
-        {Number(payload[0]?.value ?? 0).toFixed(0)} <span className="text-slate-500 font-normal">km/s</span>
-      </p>
-    </div>
-  );
-};
+  const speedVal = payload.find((p: any) => p.dataKey === "speed")?.value;
+  const bzVal = payload.find((p: any) => p.dataKey === "magneticField")?.value;
 
-const BzTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload?.length) return null;
-  const val = Number(payload[0]?.value ?? 0);
-  const isNegative = val < 0;
   return (
-    <div className="bg-[#030712]/95 border border-rose-500/20 px-3 py-2 rounded-lg text-xs font-mono shadow-2xl backdrop-blur-md">
-      <p className="text-slate-400 mb-1">{label ? format(new Date(label), "HH:mm 'UTC'") : ""}</p>
-      <p className={`font-bold tabular-nums ${isNegative ? "text-rose-400" : "text-emerald-400"}`}>
-        {val > 0 ? "+" : ""}{val.toFixed(2)} <span className="text-slate-500 font-normal">nT</span>
+    <div className="bg-[#030712]/95 border border-white/10 px-3.5 py-2.5 rounded-xl text-xs font-mono shadow-2xl backdrop-blur-md min-w-[160px]">
+      <p className="text-slate-400 mb-2 pb-1.5 border-b border-white/5">
+        {label ? format(new Date(label), "HH:mm 'UTC'") : ""}
       </p>
-      {isNegative && val < -10 && (
-        <p className="text-rose-500 text-[10px] mt-0.5">⚠ Storm Coupling Active</p>
-      )}
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            <span className="text-slate-300">Speed:</span>
+          </div>
+          <span className="text-cyan-400 font-bold tabular-nums">
+            {speedVal !== undefined ? Number(speedVal).toFixed(0) : "N/A"} <span className="text-slate-500 font-normal text-[10px]">km/s</span>
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+            <span className="text-slate-300">IMF Bz:</span>
+          </div>
+          <span className={`font-bold tabular-nums ${bzVal < 0 ? "text-rose-400" : "text-emerald-400"}`}>
+            {bzVal !== undefined ? (bzVal > 0 ? "+" : "") + Number(bzVal).toFixed(2) : "N/A"} <span className="text-slate-500 font-normal text-[10px]">nT</span>
+          </span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -71,17 +76,6 @@ export default function SolarParametersChart() {
     link.click();
     document.body.removeChild(link);
   };
-
-  const sharedXAxis = (
-    <XAxis
-      dataKey="timestamp"
-      tickFormatter={(val) => format(new Date(val), "HH:mm")}
-      tick={axisTick}
-      tickLine={false}
-      axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
-      minTickGap={40}
-    />
-  );
 
   return (
     <motion.div
@@ -123,77 +117,101 @@ export default function SolarParametersChart() {
             <ErrorState title="Failed to load telemetry" onRetry={() => refetch()} />
           </div>
         ) : (
-          <div className="flex-1 p-5 grid grid-rows-[1fr_1fr] gap-4">
-            {/* Panel 1: Solar Wind Speed */}
-            <div className="relative h-full w-full">
-              <div className="absolute top-0 left-0 flex items-center gap-1.5 z-10">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.6)]" />
-                <span className="text-[10px] font-mono text-slate-300 uppercase tracking-wider">Speed (km/s)</span>
-              </div>
-              <div className="w-full h-full pt-6">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={safeData} margin={{ top: 0, right: 8, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                    {sharedXAxis}
-                    <YAxis
-                      domain={["dataMin - 15", "dataMax + 15"]}
-                      tick={axisTick}
-                      tickLine={false}
-                      axisLine={false}
-                      width={42}
-                    />
-                    <Tooltip content={<SpeedTooltip />} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }} />
-                    <Line
-                      type="monotone"
-                      dataKey="speed"
-                      name="Speed (km/s)"
-                      stroke="#22d3ee"
-                      strokeWidth={1.5}
-                      dot={false}
-                      connectNulls
-                      isAnimationActive={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+          <div className="flex-1 p-5 flex flex-col justify-center">
+            {/* Fixed height chart wrapper to prevent ResponsiveContainer from collapsing to 0px */}
+            <div className="w-full h-[220px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={safeData} margin={{ top: 10, right: 5, left: -22, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                  
+                  <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={(val) => format(new Date(val), "HH:mm")}
+                    tick={axisTick}
+                    tickLine={false}
+                    axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                    minTickGap={45}
+                  />
 
-            {/* Panel 2: IMF Bz (nT) */}
-            <div className="relative h-full w-full">
-              <div className="absolute top-0 left-0 flex items-center gap-1.5 z-10">
-                <span className="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_6px_rgba(251,113,133,0.6)]" />
-                <span className="text-[10px] font-mono text-slate-300 uppercase tracking-wider">IMF Bz (nT)</span>
-              </div>
-              <div className="w-full h-full pt-6">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={safeData} margin={{ top: 0, right: 8, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="2 4" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                    {sharedXAxis}
-                    <YAxis
-                      domain={["dataMin - 2", "dataMax + 2"]}
-                      tick={axisTick}
-                      tickLine={false}
-                      axisLine={false}
-                      width={42}
-                    />
-                    <Tooltip content={<BzTooltip />} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }} />
-                    <ReferenceLine y={0} stroke="#e2e8f0" strokeOpacity={0.15} strokeDasharray="4 4" />
-                    <ReferenceLine y={-10} stroke="#f43f5e" strokeOpacity={0.4} strokeDasharray="3 3"
-                      label={{ value: "Storm", position: "insideTopRight", fill: "#f43f5e", fontSize: 9, fontFamily: "monospace" }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="magneticField"
-                      name="Bz (nT)"
-                      stroke="#f43f5e"
-                      strokeWidth={1.5}
-                      dot={false}
-                      connectNulls
-                      isAnimationActive={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+                  {/* Left Axis: Speed */}
+                  <YAxis
+                    yAxisId="left"
+                    orientation="left"
+                    domain={["dataMin - 15", "dataMax + 15"]}
+                    tick={axisTick}
+                    tickLine={false}
+                    axisLine={false}
+                    width={38}
+                  />
+
+                  {/* Right Axis: Bz */}
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    domain={["dataMin - 2", "dataMax + 2"]}
+                    tick={axisTick}
+                    tickLine={false}
+                    axisLine={false}
+                    width={32}
+                  />
+
+                  <Tooltip content={<DualTooltip />} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }} />
+                  
+                  {/* Visual Reference Guidelines */}
+                  <ReferenceLine yAxisId="right" y={0} stroke="rgba(255,255,255,0.15)" strokeDasharray="3 3" />
+                  <ReferenceLine 
+                    yAxisId="right" 
+                    y={-10} 
+                    stroke="#f43f5e" 
+                    strokeOpacity={0.4} 
+                    strokeDasharray="3 3"
+                    label={{ value: "Storm Warning", position: "insideTopRight", fill: "#f43f5e", fontSize: 9, fontFamily: "monospace" }}
+                  />
+
+                  {/* Speed Line (Left Axis) */}
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="speed"
+                    name="Speed (km/s)"
+                    stroke="#22d3ee"
+                    strokeWidth={1.5}
+                    dot={false}
+                    connectNulls
+                    isAnimationActive={false}
+                  />
+
+                  {/* Bz Line (Right Axis) */}
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="magneticField"
+                    name="Bz (nT)"
+                    stroke="#f43f5e"
+                    strokeWidth={1.5}
+                    dot={false}
+                    connectNulls
+                    isAnimationActive={false}
+                  />
+
+                  <Legend 
+                    verticalAlign="top" 
+                    height={36} 
+                    iconType="circle"
+                    iconSize={8}
+                    content={({ payload }) => (
+                      <div className="flex items-center justify-center gap-6 text-[10px] font-mono tracking-wider uppercase text-slate-400">
+                        {payload?.map((entry: any, index: number) => (
+                          <div key={index} className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                            <span>{entry.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
         )}
