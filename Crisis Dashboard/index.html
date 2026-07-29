@@ -81,7 +81,203 @@
     <link rel="dns-prefetch" href="https://sdo.gsfc.nasa.gov" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Premium CSS-based space-tech pre-loader (Replaced by React once loaded) -->
+      <div id="pre-loader" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #030712;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        color: #f8fafc;
+        overflow: hidden;
+      ">
+        <!-- Ambient grid backdrop lines -->
+        <div style="
+          position: absolute;
+          inset: 0;
+          background-image: 
+            linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+          background-size: 40px 40px;
+          background-position: center;
+          pointer-events: none;
+        "></div>
+
+        <!-- Glowing Nebula Backdrop -->
+        <div style="
+          position: absolute;
+          width: 300px;
+          height: 300px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 70%);
+          filter: blur(40px);
+          animation: pulse-nebula 4s ease-in-out infinite;
+          pointer-events: none;
+        "></div>
+
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 24px; z-index: 10;">
+          <!-- Spinning radar ring -->
+          <div class="radar-container" style="
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px dashed rgba(34,211,238,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <div style="
+              position: absolute;
+              width: 64px;
+              height: 64px;
+              border-radius: 50%;
+              border: 2px solid transparent;
+              border-top-color: #22d3ee;
+              border-bottom-color: #f43f5e;
+              animation: spin-loader 1.5s linear infinite;
+            "></div>
+            <div style="
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background-color: #22d3ee;
+              box-shadow: 0 0 12px #22d3ee;
+              animation: blink-dot 1s ease-in-out infinite;
+            "></div>
+          </div>
+
+          <!-- Loading logs and status -->
+          <div style="text-align: center; display: flex; flex-direction: column; gap: 8px;">
+            <div style="
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 0.15em;
+              color: #22d3ee;
+              text-shadow: 0 0 8px rgba(34,211,238,0.4);
+              text-transform: uppercase;
+              animation: pulse-text 1.5s ease-in-out infinite;
+            ">
+              Initializing Core Telemetry Link
+            </div>
+            <div style="
+              font-size: 9px;
+              letter-spacing: 0.1em;
+              color: rgba(255,255,255,0.4);
+              text-transform: uppercase;
+            ">
+              Establishing Orbit Constraints &amp; Physics Validation
+            </div>
+          </div>
+        </div>
+
+        <style>
+          @keyframes spin-loader {
+            to { transform: rotate(360deg); }
+          }
+          @keyframes blink-dot {
+            0%, 100% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+          }
+          @keyframes pulse-text {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+          }
+          @keyframes pulse-nebula {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 0.9; }
+          }
+        </style>
+      </div>
+    </div>
+
+    <!-- Fallback message for browsers without JavaScript -->
+    <noscript>
+      <div style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #030712;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        color: #f8fafc;
+        text-align: center;
+        padding: 24px;
+        box-sizing: border-box;
+      ">
+        <!-- Ambient grid backdrop lines -->
+        <div style="
+          position: absolute;
+          inset: 0;
+          background-image: 
+            linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+          background-size: 40px 40px;
+          background-position: center;
+          pointer-events: none;
+        "></div>
+
+        <div style="
+          position: relative;
+          z-index: 10;
+          max-width: 480px;
+          border: 1px solid rgba(244,63,94,0.3);
+          background-color: rgba(244,63,94,0.03);
+          padding: 36px 28px;
+          border-radius: 16px;
+          box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        ">
+          <div style="
+            font-size: 20px;
+            color: #f43f5e;
+            margin-bottom: 16px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+          ">
+            ⚠️ LINK INITIATION FAILED
+          </div>
+          <p style="
+            font-size: 12px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 24px;
+            font-family: sans-serif;
+          ">
+            Crisis Space Weather Intelligence requires JavaScript to render real-time solar wind graphs, auroral forecast maps, and multi-satellite telemetry feeds. Please enable JavaScript in your browser settings to proceed.
+          </p>
+          <a href="https://www.enable-javascript.com/" target="_blank" rel="noopener noreferrer" style="
+            display: inline-block;
+            background-color: #22d3ee;
+            color: #030712;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(34,211,238,0.3);
+          ">
+            How to enable JavaScript
+          </a>
+        </div>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
