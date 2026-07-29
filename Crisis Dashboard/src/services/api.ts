@@ -244,6 +244,25 @@ export async function getImpactSummary(): Promise<ImpactRisk | null> {
     const eventId = events[0].id;
     const numericId = parseInt(eventId, 10);
 
+    const prediction = await getPredictionSummary();
+    const kp = (prediction && prediction.kpIndex != null) ? prediction.kpIndex : 5.0;
+
+    const getRiskLevel = (thCritical: number, thHigh: number, thMedium: number) => {
+      if (kp >= thCritical) return "critical" as const;
+      if (kp >= thHigh) return "high" as const;
+      if (kp >= thMedium) return "medium" as const;
+      return "low" as const;
+    };
+
+    const overallRisk = getRiskLevel(8.0, 6.0, 5.0);
+    const riskScore = Math.min(99, Math.max(10, Math.round(kp * 11)));
+
+    const gpsRisk = getRiskLevel(7.5, 6.0, 4.0);
+    const satelliteRisk = getRiskLevel(8.0, 6.0, 4.5);
+    const powerGridRisk = getRiskLevel(7.5, 6.0, 5.0);
+    const airlinesRisk = getRiskLevel(8.0, 6.5, 5.0);
+    const astronautRisk = getRiskLevel(8.5, 7.0, 5.5);
+
     // Only call backend if event is from DB (numeric ID)
     if (!isNaN(numericId)) {
       const response = await fetch(`${API_BASE_URL}/recommendations/event/${numericId}`);
@@ -260,13 +279,13 @@ export async function getImpactSummary(): Promise<ImpactRisk | null> {
           return {
             id: highestRiskRec.id || "risk-1",
             eventId: eventId,
-            overallRisk: highestRiskRec.risk_level === "SEVERE" ? "critical" : (highestRiskRec.risk_level === "HIGH" ? "high" : "medium"),
-            riskScore: 85,
-            gpsRisk: "medium",
-            satelliteRisk: "high",
-            powerGridRisk: "critical",
-            airlinesRisk: "high",
-            astronautRisk: "high",
+            overallRisk,
+            riskScore,
+            gpsRisk,
+            satelliteRisk,
+            powerGridRisk,
+            airlinesRisk,
+            astronautRisk,
             generatedAt: highestRiskRec.timestamp || new Date().toISOString(),
             validUntil: new Date(Date.now() + 86400000).toISOString(),
             recommendations: recommendations.map((r: any) => r.action_recommendation)
@@ -276,17 +295,17 @@ export async function getImpactSummary(): Promise<ImpactRisk | null> {
       // 404 = no recommendations yet, fall through to static advisory
     }
 
-    // Static CME impact advisory (used when event is from fallback catalog or no DB recs)
+    // Dynamic CME impact advisory (fallback catalog or no DB recommendations)
     return {
       id: "risk-advisory-001",
       eventId: eventId,
-      overallRisk: "critical",
-      riskScore: 92,
-      gpsRisk: "high",
-      satelliteRisk: "critical",
-      powerGridRisk: "critical",
-      airlinesRisk: "high",
-      astronautRisk: "critical",
+      overallRisk,
+      riskScore,
+      gpsRisk,
+      satelliteRisk,
+      powerGridRisk,
+      airlinesRisk,
+      astronautRisk,
       generatedAt: new Date().toISOString(),
       validUntil: new Date(Date.now() + 86400000).toISOString(),
       recommendations: [
@@ -481,8 +500,22 @@ export async function getSystemStatusOverview(): Promise<SystemStatusOverview> {
     physicsValidation: prediction && prediction.physicsValidated ? "Passed" : "N/A",
     aiConfidence: prediction ? Math.round((1 - prediction.uncertainty) * 100) : 90,
     cmeSpeedKmS: cmeEvent?.speed || primaryEvent?.speed || undefined,
-    activeEventId: primaryEvent ? primaryEvent.id : undefined,
-    swpcScale: hasActiveEvent ? "G5 Extreme • S3 • R3" : "G0 • S0 • R0 Normal",
+    swpcScale: (() => {
+      if (!hasActiveEvent) return "G0 • S0 • R0 Normal";
+      const kp = (prediction && prediction.kpIndex != null) ? prediction.kpIndex : 4.0;
+      let gScale = "G0";
+      let gName = "Normal";
+      let sScale = "S0";
+      let rScale = "R0";
+
+      if (kp >= 9) { gScale = "G5"; gName = "Extreme"; sScale = "S5"; rScale = "R5"; }
+      else if (kp >= 8) { gScale = "G4"; gName = "Severe"; sScale = "S4"; rScale = "R4"; }
+      else if (kp >= 7) { gScale = "G3"; gName = "Strong"; sScale = "S3"; rScale = "R3"; }
+      else if (kp >= 6) { gScale = "G2"; gName = "Moderate"; sScale = "S2"; rScale = "R2"; }
+      else if (kp >= 5) { gScale = "G1"; gName = "Minor"; sScale = "S1"; rScale = "R1"; }
+      
+      return `${gScale} ${gName} • ${sScale} • ${rScale}`;
+    })(),
     ensembleModelCount: 6,
     activeSatellitesList: sats ? sats.map(s => s.name) : ["DSCOVR", "ACE", "WIND", "SOHO"],
     physicsLawsVerified: "MHD Rankine-Hugoniot & Energy Conservation"

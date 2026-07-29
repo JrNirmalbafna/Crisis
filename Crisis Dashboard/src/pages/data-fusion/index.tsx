@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Cpu, Network, Activity, Zap, Shield, Loader2, Download, Filter, ArrowRight } from "lucide-react";
+import { Network, Activity, Zap, Shield, Loader2, Download, Filter, ArrowRight } from "lucide-react";
 import { getSatelliteHealth, getFusionResults } from "../../services/api";
 import type { SatelliteHealth, FusionResult } from "../../types/types";
 
@@ -39,6 +39,54 @@ export default function DataFusionPage() {
     const interval = setInterval(load, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Find dynamic values from fusion data list
+  const bzItem = fusion.find((f) => f.parameterName === "bz");
+  const speedItem = fusion.find((f) => f.parameterName === "plasma_speed") || fusion.find((f) => f.parameterName === "speed");
+  const pressureItem = fusion.find((f) => f.parameterName === "dynamic_pressure");
+
+  const bzValue = bzItem?.fusedValue !== undefined && bzItem?.fusedValue !== null ? Number(bzItem.fusedValue) : -4.20;
+  const speedValue = speedItem?.fusedValue !== undefined && speedItem?.fusedValue !== null ? Number(speedItem.fusedValue) : 542.8;
+  const pressureValue = pressureItem?.fusedValue !== undefined && pressureItem?.fusedValue !== null ? Number(pressureItem.fusedValue) : 6.12;
+
+  // Derive alert state from Bz/Speed
+  const isBzNegative = bzValue < 0;
+  const isHighAlert = bzValue < -10 || speedValue > 800;
+  const isWarningAlert = !isHighAlert && ((bzValue < -4 && bzValue >= -10) || (speedValue > 500 && speedValue <= 800));
+
+  const alertScaleText = isHighAlert 
+    ? "G4 — SEVERE COUPLING" 
+    : isWarningAlert 
+      ? "G2 — MODERATE COUPLING" 
+      : "G1 — MINOR COUPLING";
+
+  const alertBadgeColor = isHighAlert
+    ? "bg-rose-500/15 border-rose-500/30 text-rose-400"
+    : isWarningAlert
+      ? "bg-amber-500/15 border-amber-500/30 text-amber-400"
+      : "bg-emerald-500/15 border-emerald-500/30 text-emerald-400";
+
+  // Generate synthesis paragraph dynamically
+  const dynamicSynthesisText = `Multi-satellite L1 telemetry confirms ${
+    isBzNegative ? "southward" : "northward"
+  } magnetic orientation (Bz = ${bzValue.toFixed(2)} nT) with ${
+    speedValue > 600 ? "extreme fast-transit" : "elevated"
+  } solar wind speeds (${speedValue.toFixed(1)} km/s). Probabilistic coupling models indicate ${
+    isHighAlert ? "severe" : isWarningAlert ? "moderate" : "nominal"
+  } geomagnetic perturbation. High-latitude auroral oval activity and space asset tracking warning systems should monitor for anomalies.`;
+
+  // Calculate average confidence for the display
+  const averageConfidence = fusion.length > 0
+    ? (fusion.reduce((acc, curr) => {
+        let confidenceVal = 0.98;
+        Object.entries(curr.individualReadings || {}).forEach(([sat, rawWt]) => {
+          if (sat === "confidence") {
+            confidenceVal = typeof rawWt === 'number' && rawWt <= 1.0 ? rawWt : 0.98;
+          }
+        });
+        return acc + confidenceVal;
+      }, 0) / fusion.length) * 100
+    : 92.4;
 
   if (loading) {
     return (
@@ -127,37 +175,30 @@ export default function DataFusionPage() {
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative min-h-[280px] shadow-lg shadow-black/50 overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/5 to-transparent pointer-events-none" />
             
-            {/* Left Col: Core Visualizer (4 cols) */}
+            {/* Left Col: Core Visualizer (5 cols) */}
             <div className="md:col-span-5 flex flex-col items-center justify-center relative my-4">
               <div className="relative flex items-center justify-center w-40 h-40">
-                <svg className="absolute w-[120%] h-[120%] opacity-40 pointer-events-none" viewBox="0 0 200 200">
-                  <defs>
-                    <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="transparent" />
-                      <stop offset="100%" stopColor="#22d3ee" />
-                    </linearGradient>
-                  </defs>
-                  
-                  <motion.line x1="20" y1="20" x2="100" y2="100" stroke="url(#beam)" strokeWidth="2" strokeDasharray="4 4" animate={{ strokeDashoffset: [-20, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
-                  <motion.line x1="180" y1="20" x2="100" y2="100" stroke="url(#beam)" strokeWidth="2" strokeDasharray="4 4" animate={{ strokeDashoffset: [-20, 0] }} transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }} />
-                  <motion.line x1="20" y1="180" x2="100" y2="100" stroke="url(#beam)" strokeWidth="2" strokeDasharray="4 4" animate={{ strokeDashoffset: [20, 0] }} transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }} />
-                  <motion.line x1="180" y1="180" x2="100" y2="100" stroke="url(#beam)" strokeWidth="2" strokeDasharray="4 4" animate={{ strokeDashoffset: [20, 0] }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }} />
-                  
-                  <motion.circle cx="100" cy="100" r="30" fill="none" stroke="#6366f1" strokeWidth="1" animate={{ r: [30, 60], opacity: [0.5, 0] }} transition={{ duration: 2, repeat: Infinity }} />
-                  <motion.circle cx="100" cy="100" r="30" fill="none" stroke="#22d3ee" strokeWidth="1" animate={{ r: [30, 80], opacity: [0.3, 0] }} transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
+                <svg className="absolute w-[130%] h-[130%] opacity-30 pointer-events-none animate-spin" style={{ animationDuration: '30s' }} viewBox="0 0 200 200">
+                  <circle cx="100" cy="100" r="85" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeDasharray="6 12" />
+                  <circle cx="100" cy="100" r="70" fill="none" stroke="#6366f1" strokeWidth="1" strokeDasharray="3 6" />
                 </svg>
-
-                <motion.div 
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-28 h-28 rounded-full border-2 border-indigo-500/50 bg-indigo-950/80 backdrop-blur-md flex items-center justify-center shadow-[0_0_50px_rgba(99,102,241,0.3)] z-10"
-                >
-                  <Cpu className="w-10 h-10 text-indigo-400" />
-                </motion.div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.div 
+                    animate={{ scale: [1, 1.03, 1] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-32 h-32 rounded-full border border-cyan-500/30 bg-slate-950/90 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(34,211,238,0.15)] z-10 p-3 text-center"
+                  >
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none mb-1">CONGREGATE</span>
+                    <span className="text-2xl font-mono font-bold text-cyan-400 tracking-tight leading-none tabular-nums">{averageConfidence.toFixed(1)}%</span>
+                    <span className="text-[9px] font-mono text-emerald-400 mt-2 px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 uppercase font-bold tracking-wider leading-none">
+                      LOCK
+                    </span>
+                  </motion.div>
+                </div>
               </div>
               <div className="mt-4 text-center z-10">
                 <h3 className="text-base font-bold text-slate-100">Consensus Engine Active</h3>
-                <p className="text-xs text-cyan-400 font-mono mt-1">PROCESSING {fusion.length} PHYSICAL PARAMETERS</p>
+                <p className="text-xs text-cyan-400 font-mono mt-1">PROCESSING {fusion.length} REAL-TIME CHANNELS</p>
               </div>
             </div>
 
@@ -168,34 +209,34 @@ export default function DataFusionPage() {
                   <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
                   AI FUSION INFERENCE & HAZARD SYNTHESIS
                 </span>
-                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center gap-1.5 shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-                  G1 — MODERATE COUPLING
+                <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border flex items-center gap-1.5 shadow-sm ${alertBadgeColor}`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                  {alertScaleText}
                 </span>
               </div>
 
               {/* Key Physical Drivers Pill Cards */}
               <div className="grid grid-cols-3 gap-2.5">
-                <div className="bg-slate-950/60 border border-amber-500/20 rounded-lg p-2.5 text-center">
+                <div className="bg-slate-950/60 border border-slate-850 rounded-lg p-2.5 text-center">
                   <div className="text-[10px] text-slate-400 uppercase font-mono">IMF Southward (Bz)</div>
-                  <div className="text-sm font-bold font-mono text-amber-400 mt-0.5">-4.20 nT</div>
-                  <div className="text-[9px] text-amber-500/80 font-medium">Reconnection Active</div>
+                  <div className="text-sm font-bold font-mono text-amber-400 mt-0.5">{bzValue.toFixed(2)} nT</div>
+                  <div className="text-[9px] text-amber-500/80 font-medium">{isBzNegative ? "Reconnection Active" : "Neutral Field"}</div>
                 </div>
-                <div className="bg-slate-950/60 border border-cyan-500/20 rounded-lg p-2.5 text-center">
+                <div className="bg-slate-950/60 border border-slate-850 rounded-lg p-2.5 text-center">
                   <div className="text-[10px] text-slate-400 uppercase font-mono">Solar Wind Speed</div>
-                  <div className="text-sm font-bold font-mono text-cyan-400 mt-0.5">542.8 km/s</div>
-                  <div className="text-[9px] text-cyan-500/80 font-medium">Elevated Stream</div>
+                  <div className="text-sm font-bold font-mono text-cyan-400 mt-0.5">{speedValue.toFixed(1)} km/s</div>
+                  <div className="text-[9px] text-cyan-500/80 font-medium">{speedValue > 600 ? "High Stream" : "Nominal Stream"}</div>
                 </div>
-                <div className="bg-slate-950/60 border border-emerald-500/20 rounded-lg p-2.5 text-center">
+                <div className="bg-slate-950/60 border border-slate-850 rounded-lg p-2.5 text-center">
                   <div className="text-[10px] text-slate-400 uppercase font-mono">Ram Pressure</div>
-                  <div className="text-sm font-bold font-mono text-emerald-400 mt-0.5">6.12 nPa</div>
-                  <div className="text-[9px] text-emerald-500/80 font-medium">Nominal Compression</div>
+                  <div className="text-sm font-bold font-mono text-emerald-400 mt-0.5">{pressureValue.toFixed(2)} nPa</div>
+                  <div className="text-[9px] text-emerald-500/80 font-medium">{pressureValue > 8 ? "Compressed Boundary" : "Nominal Compression"}</div>
                 </div>
               </div>
 
               {/* Comprehensive Synthesis Description Box */}
               <div className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-3.5 text-xs text-slate-300 leading-relaxed font-sans shadow-inner">
-                <span className="font-bold text-cyan-400">Consensus Synthesis:</span> Multi-satellite L1 telemetry (DSCOVR, ACE, WIND) confirms southward magnetic orientation (<span className="font-mono text-amber-300">Bz = -4.20 nT</span>) with elevated dynamic ram pressure. Probabilistic coupling model indicates minor-to-moderate geomagnetic perturbation (<span className="font-mono text-indigo-300">Kp ~4.2 EST</span>). High-latitude auroral oval expansion and minor LEO satellite surface charging expected.
+                <span className="font-bold text-cyan-400">Consensus Synthesis:</span> {dynamicSynthesisText}
               </div>
             </div>
 
