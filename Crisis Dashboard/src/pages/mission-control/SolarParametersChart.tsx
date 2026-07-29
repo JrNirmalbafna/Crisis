@@ -101,7 +101,7 @@ export default function SolarParametersChart() {
             yAxisId="left"
             orientation="left"
             domain={["dataMin - 15", "dataMax + 15"]}
-            tick={axisTick}
+            tick={{ fill: "#22d3ee", fontSize: 10, fontFamily: "monospace" }}
             tickFormatter={(val) => Math.round(val).toString()}
             tickLine={false}
             axisLine={false}
@@ -113,7 +113,7 @@ export default function SolarParametersChart() {
             yAxisId="right"
             orientation="right"
             domain={["dataMin - 2", "dataMax + 2"]}
-            tick={axisTick}
+            tick={{ fill: "#f43f5e", fontSize: 10, fontFamily: "monospace" }}
             tickFormatter={(val) => Number(val).toFixed(1)}
             tickLine={false}
             axisLine={false}
@@ -194,7 +194,7 @@ export default function SolarParametersChart() {
             <div className="flex flex-col gap-1">
               <h3 className="text-[15px] font-semibold text-white/90 leading-none">Solar Parameters</h3>
               <p className="text-[11px] text-white/50 font-mono tracking-wide uppercase mt-0.5">
-                L1 Telemetry · Dynamic Auto-Scaled View
+                L1 Telemetry · Speed (Cyan, Left Axis) vs. IMF Bz (Rose, Right Axis)
               </p>
             </div>
             <div className="flex items-center gap-1.5">
