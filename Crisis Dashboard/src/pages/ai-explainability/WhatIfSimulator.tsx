@@ -68,13 +68,27 @@ export default function WhatIfSimulator() {
             </p>
           </div>
         </div>
-        <button
-          onClick={resetToNominal}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 border border-slate-700 transition-colors"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          Reset Baseline
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => { setBz(-22); setSpeed(950); setDensity(42); }}
+            className="px-2.5 py-1 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-[11px] font-mono text-rose-300 border border-rose-500/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          >
+            1989 Quebec G5
+          </button>
+          <button
+            onClick={() => { setBz(-18); setSpeed(820); setDensity(35); }}
+            className="px-2.5 py-1 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 text-[11px] font-mono text-amber-300 border border-amber-500/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          >
+            2003 Halloween G4
+          </button>
+          <button
+            onClick={resetToNominal}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 border border-slate-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset Baseline
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 items-center">
@@ -83,23 +97,25 @@ export default function WhatIfSimulator() {
           {/* Bz Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-200">
+              <label htmlFor="slider-bz" className="font-semibold text-slate-200 cursor-pointer">
                 IMF Bz Magnetic Field <span className="text-slate-400 font-normal">(Southward vs Northward)</span>
-              </span>
+              </label>
               <span className="font-mono font-bold text-cyan-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">
                 {bz > 0 ? `+${bz}` : bz} nT
               </span>
             </div>
             <input
+              id="slider-bz"
+              aria-label="IMF Bz Magnetic Field in nanoteslas"
               type="range"
               min="-25"
               max="15"
               step="0.5"
               value={bz}
               onChange={(e) => setBz(parseFloat(e.target.value))}
-              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="flex justify-between text-[10px] font-mono text-slate-300">
               <span>-25 nT (Extreme Southward)</span>
               <span>0 nT</span>
               <span>+15 nT (Northward)</span>
@@ -109,23 +125,25 @@ export default function WhatIfSimulator() {
           {/* Speed Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-200">
+              <label htmlFor="slider-speed" className="font-semibold text-slate-200 cursor-pointer">
                 Solar Wind Bulk Velocity <span className="text-slate-400 font-normal">(CME Shock Speed)</span>
-              </span>
+              </label>
               <span className="font-mono font-bold text-cyan-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">
                 {speed} km/s
               </span>
             </div>
             <input
+              id="slider-speed"
+              aria-label="Solar Wind Bulk Velocity in kilometers per second"
               type="range"
               min="300"
               max="1100"
               step="10"
               value={speed}
               onChange={(e) => setSpeed(parseInt(e.target.value))}
-              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="flex justify-between text-[10px] font-mono text-slate-300">
               <span>300 km/s (Slow Wind)</span>
               <span>400 km/s (Nominal)</span>
               <span>1100 km/s (Extreme CME)</span>
@@ -135,23 +153,25 @@ export default function WhatIfSimulator() {
           {/* Density Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-200">
+              <label htmlFor="slider-density" className="font-semibold text-slate-200 cursor-pointer">
                 Plasma Ram Density <span className="text-slate-400 font-normal">(Proton Sheath Density)</span>
-              </span>
+              </label>
               <span className="font-mono font-bold text-cyan-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">
                 {density} p/cm³
               </span>
             </div>
             <input
+              id="slider-density"
+              aria-label="Plasma Ram Density in protons per cubic centimeter"
               type="range"
               min="1"
               max="50"
               step="0.5"
               value={density}
               onChange={(e) => setDensity(parseFloat(e.target.value))}
-              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="flex justify-between text-[10px] font-mono text-slate-300">
               <span>1.0 p/cm³</span>
               <span>5.0 p/cm³ (Nominal)</span>
               <span>50.0 p/cm³ (High Compression)</span>

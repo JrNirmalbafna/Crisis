@@ -55,7 +55,7 @@ export default function LandingPage() {
         <div
           className="absolute inset-0 z-0 pointer-events-none"
           style={{
-            background: "linear-gradient(to bottom, rgba(3,7,18,0.3), rgba(3,7,18,0.6))",
+            background: "linear-gradient(to bottom, rgba(3,7,18,0.4), rgba(3,7,18,0.78))",
           }}
         />
 
@@ -102,7 +102,7 @@ export default function LandingPage() {
           <h1 className="text-5xl sm:text-6xl font-black text-white mb-4 leading-none tracking-tight">
             {APP_META.name}
           </h1>
-          <p className="text-lg text-white/50 mb-3 font-light leading-relaxed">
+          <p className="text-lg text-slate-300 mb-3 font-light leading-relaxed drop-shadow-md">
             {APP_META.description}
           </p>
 
@@ -110,7 +110,7 @@ export default function LandingPage() {
           {/* CTA */}
           <motion.button
             onClick={() => navigate(ROUTES.MISSION_CONTROL)}
-            className="group flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 mx-auto"
+            className="group flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 mx-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#030712]"
             style={{
               background: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)",
               boxShadow: "0 4px 24px rgba(59,130,246,0.35)",
@@ -122,8 +122,13 @@ export default function LandingPage() {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </motion.button>
 
+          {/* Institutional Credibility Badge Bar */}
+          <div className="mt-4 px-4 py-1.5 rounded-full bg-slate-900/60 border border-slate-800 text-[11px] font-mono text-slate-400 tracking-wider">
+            Ingesting Live L1 Telemetry: <span className="text-cyan-300 font-semibold">NOAA SWPC</span> • <span className="text-blue-300 font-semibold">NASA DSCOVR • ACE • WIND • SOHO</span>
+          </div>
+
           {/* Feature pills */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-10">
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
             {[
               { icon: Satellite, label: "Multi-Satellite Fusion" },
               { icon: BrainCircuit, label: "AI Predictions" },
@@ -131,7 +136,7 @@ export default function LandingPage() {
             ].map(({ icon: Icon, label }) => (
               <div
                 key={label}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/50"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-slate-300"
                 style={{
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.07)",
@@ -184,13 +189,23 @@ export default function LandingPage() {
           
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: "Multi-Satellite Ingestion", desc: "Real-time telemetry streams from L1 Lagrange point observatories (DSCOVR, ACE, WIND, SOHO) are ingested simultaneously to ensure zero blind spots." },
-              { title: "Dynamic Weighting", desc: "Our AI algorithm continuously analyzes sensor noise, latency, and spatial relevance, dynamically re-weighting satellite trust scores to isolate the cleanest signal." },
-              { title: "Physics Validation", desc: "All neural network predictions are cross-checked against fundamental heliophysics constraints to eliminate hallucinations and guarantee scientific accuracy." }
+              { title: "Multi-Satellite Ingestion", desc: "Real-time telemetry streams from L1 Lagrange point observatories (DSCOVR, ACE, WIND, SOHO) are ingested simultaneously to ensure zero blind spots.", route: ROUTES.DATA_FUSION },
+              { title: "Dynamic Weighting", desc: "Our AI algorithm continuously analyzes sensor noise, latency, and spatial relevance, dynamically re-weighting satellite trust scores to isolate the cleanest signal.", route: ROUTES.AI_EXPLAINABILITY },
+              { title: "Physics Validation", desc: "All neural network predictions are cross-checked against fundamental heliophysics constraints to eliminate hallucinations and guarantee scientific accuracy.", route: ROUTES.EVENT_ANALYSIS }
             ].map((feature, i) => (
-              <div key={i} className="bg-[#020617]/60 border border-white/5 rounded-2xl p-8 backdrop-blur-md hover:bg-slate-800/40 transition-colors shadow-2xl">
+              <div 
+                key={i} 
+                onClick={() => navigate(feature.route)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && navigate(feature.route)}
+                className="bg-[#020617]/60 border border-white/5 rounded-2xl p-8 backdrop-blur-md hover:bg-slate-800/60 hover:border-cyan-500/30 transition-all cursor-pointer group shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+              >
                 <div className="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold mb-6 font-mono">0{i + 1}</div>
-                <h3 className="text-xl font-bold text-slate-200 mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-slate-200 mb-3 flex items-center justify-between">
+                  {feature.title}
+                  <ArrowRight className="w-4 h-4 text-cyan-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                </h3>
                 <p className="text-slate-400 leading-relaxed text-sm">{feature.desc}</p>
               </div>
             ))}
@@ -233,7 +248,7 @@ export default function LandingPage() {
             <Sun className="w-6 h-6 text-white" />
           </div>
           <p className="text-white/70 text-sm tracking-widest uppercase font-mono font-bold">© 2026 {APP_META.name}</p>
-          <p className="text-cyan-400/50 text-xs tracking-wide">AI-Powered Space Weather Intelligence</p>
+          <p className="text-cyan-300/80 text-xs tracking-wide font-medium">AI-Powered Space Weather Intelligence</p>
         </div>
       </footer>
     </div>

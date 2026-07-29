@@ -45,7 +45,8 @@ export default function TimelineController() {
       {/* Play/Pause */}
       <button 
         onClick={() => setIsPlaying(!isPlaying)}
-        className="w-8 h-8 rounded bg-slate-800/50 hover:bg-slate-700 text-amber-500 flex items-center justify-center transition-colors border border-slate-700/50"
+        aria-label={isPlaying ? "Pause simulation timeline" : "Play simulation timeline"}
+        className="w-8 h-8 rounded bg-slate-800/50 hover:bg-slate-700 text-amber-500 flex items-center justify-center transition-colors border border-slate-700/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
       >
         {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
       </button>
@@ -53,7 +54,7 @@ export default function TimelineController() {
       {/* LIVE toggle */}
       <button 
         onClick={jumpToLive}
-        className="px-4 py-1.5 rounded border border-slate-700/50 hover:bg-slate-800/50 text-slate-300 font-mono text-xs uppercase tracking-widest transition-colors"
+        className="px-4 py-1.5 rounded border border-slate-700/50 hover:bg-slate-800/50 text-slate-300 font-mono text-xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
       >
         Live
       </button>
@@ -64,7 +65,7 @@ export default function TimelineController() {
           <button
             key={s.label}
             onClick={() => setPlaybackSpeed(s.value)}
-            className={`px-3 py-1 text-[10px] font-mono rounded ${playbackSpeed === s.value ? 'bg-amber-500/20 text-amber-400 font-bold' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'}`}
+            className={`px-3 py-1 text-[10px] font-mono rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${playbackSpeed === s.value ? 'bg-amber-500/20 text-amber-400 font-bold' : 'text-slate-300 hover:text-slate-200 hover:bg-slate-800/50'}`}
           >
             {s.label}
           </button>
@@ -81,19 +82,20 @@ export default function TimelineController() {
         <div className="absolute w-full flex justify-between px-2 pointer-events-none top-2">
           {Array.from({ length: 11 }).map((_, i) => (
              <div key={i} className="flex flex-col items-center">
-                <span className="text-[9px] text-slate-600 font-mono mb-1">{i - 7}d</span>
+                <span className="text-[9px] text-slate-400 font-mono mb-1">{i - 7}d</span>
                 <div className="w-px h-1.5 bg-slate-700" />
              </div>
           ))}
         </div>
 
         <input 
+          aria-label="Simulation Timeline Scrubber in UTC time"
           type="range"
           min={minTime}
           max={maxTime}
           value={localTime}
           onChange={handleSliderChange}
-          className="w-full mt-4 appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:bg-slate-800 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:-mt-1 cursor-pointer relative z-10"
+          className="w-full mt-4 appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:bg-slate-800 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:-mt-1 cursor-pointer relative z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
         />
         
         {/* NOW marker */}

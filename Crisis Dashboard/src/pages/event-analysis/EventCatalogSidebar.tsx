@@ -20,19 +20,19 @@ export default function EventCatalogSidebar({ events, selectedEventId, onSelectE
           {/* Mock stats boxes like the screenshot */}
           <div className="border border-slate-700/50 rounded flex flex-col items-center justify-center py-1">
              <span className="text-cyan-400 font-bold text-xs">S</span>
-             <span className="text-slate-500 text-[9px]">277</span>
+             <span className="text-slate-400 text-[9px]">277</span>
           </div>
           <div className="border border-amber-500/30 rounded flex flex-col items-center justify-center py-1 bg-amber-500/5">
              <span className="text-amber-400 font-bold text-xs">C</span>
-             <span className="text-slate-500 text-[9px]">183</span>
+             <span className="text-slate-400 text-[9px]">183</span>
           </div>
           <div className="border border-slate-700/50 rounded flex flex-col items-center justify-center py-1">
              <span className="text-orange-400 font-bold text-xs">O</span>
-             <span className="text-slate-500 text-[9px]">13</span>
+             <span className="text-slate-400 text-[9px]">13</span>
           </div>
           <div className="border border-rose-500/30 rounded flex flex-col items-center justify-center py-1 bg-rose-500/5">
              <span className="text-rose-400 font-bold text-xs">ER</span>
-             <span className="text-slate-500 text-[9px]">8</span>
+             <span className="text-slate-400 text-[9px]">8</span>
           </div>
         </div>
       </div>
@@ -41,27 +41,27 @@ export default function EventCatalogSidebar({ events, selectedEventId, onSelectE
         {events.map((ev) => {
           const isSelected = selectedEventId === ev.id;
           return (
-            <div 
+            <button 
               key={ev.id}
               onClick={() => onSelectEvent(ev.id)}
-              className={`p-3 rounded border cursor-pointer transition-all ${isSelected ? 'border-amber-500/50 bg-slate-800/50' : 'border-slate-800/50 hover:bg-slate-900/50'}`}
+              className={`w-full text-left p-3 rounded border cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${isSelected ? 'border-amber-500/50 bg-slate-800/50' : 'border-slate-800/50 hover:bg-slate-900/50'}`}
             >
               <div className="flex justify-between items-start mb-1">
                 <span className="text-slate-300 font-mono text-xs">{new Date(ev.detectedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} UT</span>
-                <span className="border border-slate-700 rounded px-1.5 py-0.5 text-[9px] text-slate-400 font-mono">S slow</span>
+                <span className="border border-slate-700 rounded px-1.5 py-0.5 text-[9px] text-slate-300 font-mono">S slow</span>
               </div>
               <div className="font-mono text-xs text-slate-200 mb-2">
-                {ev.speed ? `${Math.round(ev.speed)} km/s` : '--- km/s'} <span className="text-slate-500 ml-1">N29W40 ±29°</span>
+                {ev.speed ? `${Math.round(ev.speed)} km/s` : '--- km/s'} <span className="text-slate-400 ml-1">N29W40 ±29°</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border ${ev.severity === 'critical' || ev.severity === 'high' ? 'border-amber-500/50 text-amber-500' : 'border-slate-600 text-slate-400'}`}>
+                <span className={`text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border ${ev.severity === 'critical' || ev.severity === 'high' ? 'border-amber-500/50 text-amber-500' : 'border-slate-600 text-slate-300'}`}>
                   {ev.severity === 'critical' ? 'EARTH DIRECTED' : 'GLANCING'}
                 </span>
-                <span className="text-[9px] text-slate-500 truncate">
+                <span className="text-[9px] text-slate-400 truncate">
                   → Earth {new Date(ev.estimatedArrival || Date.now()).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
-            </div>
+            </button>
           )
         })}
       </div>

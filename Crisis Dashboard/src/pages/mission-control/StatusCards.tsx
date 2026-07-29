@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { Activity, BrainCircuit, CheckCircle2, ShieldAlert, Signal, Radio } from "lucide-react";
 import { getMissionStatus, getSystemStatusOverview } from "../../services/api";
 import { LoadingSkeleton } from "../../components/ui-custom/LoadingSkeleton";
 import { ErrorState } from "../../components/ui-custom/ErrorState";
 import { useOperational } from "../../context/OperationalContext";
+import { ROUTES } from "../../constants/constants";
 
 export default function StatusCards() {
+  const navigate = useNavigate();
   const { 
     data: missionStatus, 
     isLoading: isLoadingMission, 
@@ -60,6 +63,7 @@ export default function StatusCards() {
       glowColor: "bg-rose-500",
       badge: "LIVE",
       badgeColor: "bg-red-500/10 text-rose-400 border-red-500/30",
+      route: ROUTES.EVENT_ANALYSIS,
     },
     {
       id: "ai-ensemble",
@@ -72,6 +76,7 @@ export default function StatusCards() {
       glowColor: "bg-purple-500",
       badge: "95% UQ",
       badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+      route: ROUTES.AI_EXPLAINABILITY,
     },
     {
       id: "mhd-physics",
@@ -84,6 +89,7 @@ export default function StatusCards() {
       glowColor: "bg-emerald-500",
       badge: "VERIFIED",
       badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+      route: ROUTES.DATA_FUSION,
     },
     {
       id: "telemetry-feed",
@@ -96,6 +102,7 @@ export default function StatusCards() {
       glowColor: "bg-cyan-500",
       badge: "ONLINE",
       badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
+      route: ROUTES.DATA_FUSION,
     },
     {
       id: "swpc-alert",
@@ -108,6 +115,7 @@ export default function StatusCards() {
       glowColor: "bg-amber-500",
       badge: "SWPC",
       badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+      route: ROUTES.EVENT_ANALYSIS,
     },
     {
       id: "constellation-link",
@@ -120,20 +128,29 @@ export default function StatusCards() {
       glowColor: "bg-blue-500",
       badge: "DSN LOCK",
       badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+      route: ROUTES.DATA_FUSION,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+    <div 
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       {cards.map((card, index) => {
         const Icon = card.icon;
         return (
           <motion.div
             key={card.id}
+            onClick={() => navigate(card.route)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && navigate(card.route)}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04, duration: 0.25 }}
-            className={`relative group overflow-hidden rounded-xl bg-slate-900/80 border backdrop-blur-xl p-3.5 flex flex-col justify-between transition-all duration-300 ${card.border} hover:shadow-lg hover:shadow-cyan-500/5 hover:-translate-y-0.5`}
+            className={`relative group overflow-hidden rounded-xl bg-slate-900/80 border backdrop-blur-xl p-3.5 flex flex-col justify-between transition-all duration-300 ${card.border} hover:shadow-lg hover:shadow-cyan-500/5 hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400`}
           >
             {/* Top gradient glow line */}
             <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${card.accent}`} />
@@ -143,7 +160,7 @@ export default function StatusCards() {
 
             {/* Header: Label + Icon */}
             <div className="flex items-start justify-between gap-2 mb-2 z-10">
-              <span className="text-[11px] font-medium text-white/60 font-mono tracking-tight uppercase leading-tight">
+              <span className="text-[11px] font-medium text-slate-300 font-mono tracking-tight uppercase leading-tight">
                 {card.label}
               </span>
               <div className="flex items-center gap-1.5 shrink-0">
@@ -165,7 +182,7 @@ export default function StatusCards() {
 
             {/* Subtext Footer */}
             <div className="z-10 mt-1 flex items-center justify-between">
-              <span className="text-[10px] text-white/40 font-mono truncate">
+              <span className="text-[10px] text-slate-300 font-mono truncate">
                 {card.subtext}
               </span>
               <span className="relative flex h-2 w-2 shrink-0 ml-1">

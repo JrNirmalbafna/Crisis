@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Cpu, Network, Activity, Zap, Shield, Loader2, ArrowRight } from "lucide-react";
+import { Cpu, Network, Activity, Zap, Shield, Loader2, Download, Filter, ArrowRight } from "lucide-react";
 import { getSatelliteHealth, getFusionResults } from "../../services/api";
 import type { SatelliteHealth, FusionResult } from "../../types/types";
 
 export default function DataFusionPage() {
   const [sats, setSats] = useState<SatelliteHealth[]>([]);
   const [fusion, setFusion] = useState<FusionResult[]>([]);
+  const [selectedSat, setSelectedSat] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const exportFusionJSON = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fusion, null, 2));
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "crisis_fusion_consensus.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
 
   useEffect(() => {
     async function load() {
@@ -54,43 +65,59 @@ export default function DataFusionPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Satellites */}
-        <div className="space-y-4 col-span-1">
-          <h2 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-indigo-400" />
-            Telemetry Streams
-          </h2>
-          {sats.map((sat, i) => (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              key={sat.name}
-              className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 flex flex-col gap-3 relative overflow-hidden shadow-lg shadow-black/50"
-            >
-              {/* Active flow indicator */}
-              {sat.health !== "critical" && (
-                <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500/0 via-cyan-400 to-cyan-500/0 animate-pulse" />
-              )}
-              
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-slate-200">{sat.name}</span>
-                <span className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-slate-800 border ${sat.health === "nominal" ? "border-emerald-500/50 text-emerald-400" : sat.health === "warning" ? "border-amber-500/50 text-amber-400" : "border-rose-500/50 text-rose-400"}`}>
-                  {sat.health}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-1">AI Weight</div>
-                  <div className="text-xl font-mono text-cyan-400 font-bold">{sat.trustScore}%</div>
+        {/* Left: Satellite Trust Scores */}
+        <div className="col-span-1 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">Spacecraft Health & Trust</h2>
+            {selectedSat && (
+              <button
+                onClick={() => setSelectedSat(null)}
+                className="text-[10px] font-mono text-cyan-400 hover:underline flex items-center gap-1"
+              >
+                <Filter className="w-3 h-3" /> Clear Filter ({selectedSat})
+              </button>
+            )}
+          </div>
+          {sats.map((sat) => {
+            const isSelected = selectedSat === sat.name;
+            return (
+              <motion.div 
+                key={sat.name}
+                onClick={() => setSelectedSat(isSelected ? null : sat.name)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && setSelectedSat(isSelected ? null : sat.name)}
+                whileHover={{ x: 4 }}
+                className={`p-4 rounded-xl border transition-all cursor-pointer relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+                  isSelected
+                    ? "bg-slate-800/90 border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+                    : "bg-slate-900/60 border-slate-800/80 hover:bg-slate-800/40 hover:border-slate-700"
+                }`}
+              >
+                {/* Active flow indicator */}
+                {sat.health !== "critical" && (
+                  <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500/0 via-cyan-400 to-cyan-500/0 animate-pulse" />
+                )}
+                
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-slate-200">{sat.name}</span>
+                  <span className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-slate-800 border ${sat.health === "nominal" ? "border-emerald-500/50 text-emerald-400" : sat.health === "warning" ? "border-amber-500/50 text-amber-400" : "border-rose-500/50 text-rose-400"}`}>
+                    {sat.health}
+                  </span>
                 </div>
-                <div>
-                  <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-1">Latency</div>
-                  <div className="text-xl font-mono text-slate-300 font-bold">{sat.latency}ms</div>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <div>
+                    <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">AI Weight</div>
+                    <div className="text-xl font-mono text-cyan-400 font-bold">{sat.trustScore}%</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Latency</div>
+                    <div className="text-xl font-mono text-slate-300 font-bold">{sat.latency}ms</div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Center/Right: Engine & Data */}
@@ -179,14 +206,23 @@ export default function DataFusionPage() {
             <div className="p-4 border-b border-slate-800 bg-slate-900/80 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
                 <Zap className="w-5 h-5 text-amber-400" />
-                Unified Physics Output
+                Unified Physics Output {selectedSat ? `(Filtered: ${selectedSat})` : ""}
               </h2>
-              <span className="text-[10px] font-bold tracking-wider text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 rounded flex items-center gap-1">
-                <Shield className="w-3 h-3" /> VERIFIED
-              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={exportFusionJSON}
+                  className="flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono rounded border border-slate-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                >
+                  <Download className="w-3.5 h-3.5" /> Export (.JSON)
+                </button>
+                <span className="text-[10px] font-bold tracking-wider text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 rounded flex items-center gap-1">
+                  <Shield className="w-3 h-3" /> VERIFIED
+                </span>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
+                <caption className="sr-only">Real-time Bayesian consensus physics parameters fused across L1 spacecraft with confidence scores and primary trust sources.</caption>
                 <thead>
                   <tr className="bg-slate-800/40 text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
                     <th className="p-4 font-semibold">Parameter</th>

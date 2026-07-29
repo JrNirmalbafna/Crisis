@@ -142,40 +142,46 @@ export default function OperatorFeedbackPanel() {
           <div className="grid grid-cols-2 gap-3 pt-1">
             <div className="space-y-1">
               <div className="flex justify-between text-[11px] text-slate-300">
-                <span>DSCOVR Trust Weight</span>
+                <label htmlFor="dscovr-trust-slider">DSCOVR Trust Weight</label>
                 <span className="font-mono text-cyan-400">{dscovrTrust}%</span>
               </div>
               <input
+                id="dscovr-trust-slider"
+                aria-label="DSCOVR Trust Weight Percentage"
                 type="range"
                 min="30"
                 max="100"
                 value={dscovrTrust}
                 onChange={(e) => setDscovrTrust(parseInt(e.target.value))}
-                className="w-full accent-cyan-400 bg-slate-800 h-1.5 rounded"
+                className="w-full accent-cyan-400 bg-slate-800 h-1.5 rounded cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
               />
             </div>
             <div className="space-y-1">
               <div className="flex justify-between text-[11px] text-slate-300">
-                <span>SOHO Optical Trust</span>
+                <label htmlFor="soho-trust-slider">SOHO Optical Trust</label>
                 <span className="font-mono text-pink-400">{sohoTrust}%</span>
               </div>
               <input
+                id="soho-trust-slider"
+                aria-label="SOHO Optical Trust Percentage"
                 type="range"
                 min="30"
                 max="100"
                 value={sohoTrust}
                 onChange={(e) => setSohoTrust(parseInt(e.target.value))}
-                className="w-full accent-pink-400 bg-slate-800 h-1.5 rounded"
+                className="w-full accent-pink-400 bg-slate-800 h-1.5 rounded cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
               />
             </div>
           </div>
 
           {/* Operational Rationale Textarea */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300 block">
-              Operational Audit Rationale <span className="text-slate-500 font-normal">(Required for logs)</span>
+            <label htmlFor="rationale-input" className="text-xs font-semibold text-slate-300 block">
+              Operational Audit Rationale <span className="text-slate-400 font-normal">(Required for logs)</span>
             </label>
             <textarea
+              id="rationale-input"
+              aria-label="Operational Audit Rationale"
               rows={2}
               value={rationale}
               onChange={(e) => setRationale(e.target.value)}
@@ -186,15 +192,22 @@ export default function OperatorFeedbackPanel() {
                   ? "e.g., Flagging temporary radio noise spike on ACE SWEPAM sensor..."
                   : "e.g., Terrestrial magnetometer arrays in high latitudes indicate Kp 7.0 limit..."
               }
-              className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+              className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors"
               required
             />
           </div>
 
+          {submitted && (
+            <div role="alert" className="p-2.5 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-mono flex items-center justify-center gap-2 animate-fade-in">
+              <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Analyst Calibration Applied — Ensemble PINN Weights Recalibrated</span>
+            </div>
+          )}
+
           {/* Submit Action */}
           <button
             type="submit"
-            className="w-full py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-lg shadow-cyan-500/20"
+            className="w-full py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-lg shadow-cyan-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
           >
             {submitted ? (
               <>

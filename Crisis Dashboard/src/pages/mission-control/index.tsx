@@ -19,7 +19,7 @@ export default function MissionControlPage() {
       {/* ── Row 2: Three Live Spacecraft Viewers (fixed height) ──────────────── */}
       <section
         aria-label="Live Solar Observatory Suite"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-5 h-[420px]"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-5 min-h-[420px] lg:h-[420px]"
       >
         {/* SOHO LASCO C2 White-light Coronagraph */}
         <div className="h-full">
@@ -36,7 +36,7 @@ export default function MissionControlPage() {
       </section>
 
       {/* ── Row 3: Recent Events Timeline (full width, scrollable internally) ── */}
-      <section aria-label="Recent Heliospheric Events" className="h-[520px]">
+      <section aria-label="Recent Heliospheric Events" className="min-h-[520px] lg:h-[520px]">
         <EventsTimeline />
       </section>
 
