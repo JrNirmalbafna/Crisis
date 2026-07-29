@@ -48,7 +48,7 @@ export default function ImpactSummary() {
 
   if (isLoading) {
     return (
-      <GlassCard padding="md" className="flex flex-col h-full gap-3">
+      <GlassCard padding="md" className="flex flex-col h-full gap-3 min-h-[350px]">
         <LoadingSkeleton variant="text" count={5} />
       </GlassCard>
     );
@@ -67,7 +67,7 @@ export default function ImpactSummary() {
       transition={{ delay: 0.3, duration: 0.3 }}
       className="h-full"
     >
-      <GlassCard padding="md" className="flex flex-col h-full">
+      <GlassCard padding="md" className="flex flex-col h-full min-h-[350px]">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>

@@ -26,7 +26,7 @@ export default function GroundMagneticsChart() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3, duration: 0.3 }}
-      className="h-full relative min-h-[300px]"
+      className="h-full relative min-h-[350px]"
     >
       <ChartWrapper
         title="Ground Magnetics (Current Ambient)"
@@ -34,7 +34,7 @@ export default function GroundMagneticsChart() {
         data={data}
         isLoading={isLoading}
         isEmpty={isError || (data && data.length === 0)}
-        height={140}
+        height={180}
         className="h-full"
       >
         <>
