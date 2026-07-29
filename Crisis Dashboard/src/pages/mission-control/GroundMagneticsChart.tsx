@@ -34,7 +34,7 @@ export default function GroundMagneticsChart() {
         data={data}
         isLoading={isLoading}
         isEmpty={isError || (data && data.length === 0)}
-        height={180}
+        height={220}
         className="h-full"
       >
         <>

@@ -40,13 +40,20 @@ export default function MissionControlPage() {
         <EventsTimeline />
       </section>
 
-      {/* ── Row 4: Analytics & Impact ─────────────────────────────────────────── */}
+      {/* ── Row 4: Analytics Charts ───────────────────────────────────────────── */}
       <section
-        aria-label="Analytics and Impact Summaries"
-        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5"
+        aria-label="Solar and Ground Ambient Analytics"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-5"
       >
         <SolarParametersChart />
         <GroundMagneticsChart />
+      </section>
+
+      {/* ── Row 5: Prediction & Risk Summaries ───────────────────────────────── */}
+      <section
+        aria-label="Geomagnetic Prediction and Impact Summaries"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-5"
+      >
         <PredictionSummary />
         <ImpactSummary />
       </section>

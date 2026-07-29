@@ -24,7 +24,7 @@ export default function PredictionSummary() {
 
   if (isLoading) {
     return (
-      <GlassCard padding="md" className="flex flex-col h-full gap-4 min-h-[350px]">
+      <GlassCard padding="md" className="flex flex-col h-full gap-4 min-h-[250px]">
         <LoadingSkeleton variant="text" count={3} />
       </GlassCard>
     );
@@ -41,7 +41,7 @@ export default function PredictionSummary() {
       transition={{ delay: 0.25, duration: 0.3 }}
       className="h-full"
     >
-      <GlassCard padding="md" className="flex flex-col h-full min-h-[350px]">
+      <GlassCard padding="md" className="flex flex-col h-full min-h-[250px]">
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
