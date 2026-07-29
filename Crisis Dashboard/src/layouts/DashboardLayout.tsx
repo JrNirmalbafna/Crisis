@@ -106,7 +106,7 @@ export default function DashboardLayout() {
               animate="animate"
               exit="exit"
               transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-              className="relative z-10 h-full"
+              className="relative z-10 min-h-full flex flex-col"
             >
               <Outlet />
             </motion.div>

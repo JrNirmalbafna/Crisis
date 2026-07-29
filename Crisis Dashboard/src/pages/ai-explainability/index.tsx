@@ -44,7 +44,7 @@ export default function AIExplainabilityPage() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in relative h-full pb-12">
+    <div className="space-y-8 animate-fade-in relative min-h-full flex flex-col pb-12">
       {/* Background ambient glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none -z-10" />
 

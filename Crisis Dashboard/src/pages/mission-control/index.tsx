@@ -10,7 +10,7 @@ import GroundMagneticsChart from "./GroundMagneticsChart";
 
 export default function MissionControlPage() {
   return (
-    <div className="flex flex-col gap-5 p-5 min-h-full">
+    <div className="flex flex-col gap-5 p-5 pb-12 min-h-full">
       {/* ── Row 1: Status Cards ──────────────────────────────────────────────── */}
       <section aria-label="System Status">
         <StatusCards />
