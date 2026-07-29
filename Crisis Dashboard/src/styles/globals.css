@@ -26,7 +26,20 @@
     --border: 217 33% 14%;
     --input: 217 33% 14%;
     --ring: 217 91% 60%;
-    --radius: 0.75rem;
+    --radius: 18px;
+
+    /* Space-Tech Deep Color Tokens */
+    --space-bg: #030712;
+    --space-surface: #07111f;
+    --space-card: rgba(255, 255, 255, 0.03);
+    --space-border: rgba(255, 255, 255, 0.08);
+    --space-border-hover: rgba(34, 211, 238, 0.25);
+    --space-border-focus: rgba(59, 130, 246, 0.50);
+
+    /* Typography Hierarchy Colors */
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
   }
 }
 
@@ -155,3 +168,37 @@
     @apply font-mono text-sm tabular-nums;
   }
 }
+
+/* ── Design System Component Layer ───────────────────────────────────────── */
+@layer components {
+  /* Standardized Interactive Buttons */
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-[12px] border border-blue-500/20 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+  }
+  .btn-secondary {
+    @apply px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs rounded-[12px] border border-slate-700 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+  }
+  .btn-outline {
+    @apply px-4 py-2 bg-transparent hover:bg-white/[0.04] text-slate-300 rounded-[12px] border border-white/10 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+  }
+
+  /* Global Headings */
+  .heading-h1 {
+    @apply text-2xl font-bold tracking-tight text-white;
+  }
+  .heading-h2 {
+    @apply text-lg font-bold tracking-tight text-slate-200;
+  }
+  .heading-h3 {
+    @apply text-sm font-semibold tracking-wider uppercase text-slate-300;
+  }
+
+  /* Muted Subtitles & Help Texts */
+  .text-desc {
+    @apply text-sm text-slate-400;
+  }
+  .text-mono-caption {
+    @apply text-[10px] text-slate-500 font-mono uppercase tracking-wider;
+  }
+}
+
