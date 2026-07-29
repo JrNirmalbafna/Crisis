@@ -56,8 +56,8 @@ export default function SolarParametersChart() {
     staleTime: 60000,
   });
 
-  // Clamp extreme outliers: speed capped at 300–1200 km/s (sensor noise guard)
-  const safeData = (data || []).map((d: any) => ({
+  // Clamp extreme outliers and limit density to last 30 points to prevent layout squeeze
+  const safeData = (data || []).slice(-30).map((d: any) => ({
     ...d,
     speed: d.speed != null ? Math.min(1200, Math.max(300, d.speed)) : null,
     magneticField: d.magneticField != null ? d.magneticField : null,
@@ -188,13 +188,13 @@ export default function SolarParametersChart() {
         transition={{ delay: 0.2, duration: 0.3 }}
         className="h-full relative"
       >
-        <GlassCard padding="none" className="h-full flex flex-col min-h-[300px]">
+        <GlassCard padding="none" className="h-full flex flex-col min-h-[350px]">
           {/* Header */}
-          <div className="flex items-start justify-between p-5 border-b border-white/[0.04] shrink-0">
+          <div className="flex items-start justify-between p-4 border-b border-white/[0.04] shrink-0">
             <div className="flex flex-col gap-1">
               <h3 className="text-[15px] font-semibold text-white/90 leading-none">Solar Parameters</h3>
-              <p className="text-[11px] text-white/50 font-mono tracking-wide uppercase mt-0.5">
-                L1 Telemetry · Speed (Cyan, Left Axis) vs. IMF Bz (Rose, Right Axis)
+              <p className="text-[10px] text-white/50 font-mono tracking-wide uppercase mt-0.5">
+                Speed (Cyan, Left Axis) vs. IMF Bz (Rose, Right Axis)
               </p>
             </div>
             <div className="flex items-center gap-1.5">
@@ -228,8 +228,8 @@ export default function SolarParametersChart() {
               <ErrorState title="Failed to load telemetry" onRetry={() => refetch()} />
             </div>
           ) : (
-            <div className="flex-1 p-5 flex flex-col justify-center">
-              {renderChart("h-[220px]")}
+            <div className="flex-1 p-4 flex flex-col justify-center">
+              {renderChart("h-[240px]")}
             </div>
           )}
         </GlassCard>
