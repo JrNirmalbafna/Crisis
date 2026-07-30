@@ -10,9 +10,9 @@ import type {
   FusionResult
 } from "../types/types";
 
-// Shadowing fetch helper with a 4000ms default timeout to prevent UI hang when backend is sleeping/offline
+// Shadowing fetch helper with a 20000ms default timeout to prevent UI hang when backend is sleeping/offline
 async function fetchWithTimeout(resource: RequestInfo | URL, options: RequestInit & { timeout?: number } = {}): Promise<Response> {
-  const { timeout = 4000, ...rest } = options;
+  const { timeout = 20000, ...rest } = options;
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   try {

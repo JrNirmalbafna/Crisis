@@ -3,9 +3,10 @@ import type { SolarParameter, PredictionResult } from "../../types/types";
 interface Props {
   params: SolarParameter[];
   prediction: PredictionResult | null;
+  syncing?: boolean;
 }
 
-export default function TopTelemetryBar({ params, prediction }: Props) {
+export default function TopTelemetryBar({ params, prediction, syncing = false }: Props) {
   const current = params.length > 0 ? params[params.length - 1] : null;
 
   return (
@@ -66,12 +67,17 @@ export default function TopTelemetryBar({ params, prediction }: Props) {
       </div>
       
       <div className="flex items-center gap-2 ml-4 hidden md:flex">
-        <span className="text-slate-500 text-[10px] uppercase tracking-wider">Data</span>
-        <span className="text-emerald-400 font-bold">cached</span>
-        <span className="text-slate-500 text-[10px] flex flex-col leading-tight items-center">
-          <span>7m</span>
-          <span>ago</span>
-        </span>
+        {syncing ? (
+          <>
+            <span className="text-slate-500 text-[10px] uppercase tracking-wider">SYNCING</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          </>
+        ) : (
+          <>
+            <span className="text-slate-500 text-[10px] uppercase tracking-wider">SYNCED</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          </>
+        )}
       </div>
     </div>
   );
