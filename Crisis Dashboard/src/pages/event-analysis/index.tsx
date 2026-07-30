@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
 import { getRecentEvents, getPredictionSummary, getImpactSummary, getSolarParameters } from "../../services/api";
 import type { CMEEvent, PredictionResult, ImpactRisk, SolarParameter } from "../../types/types";
 import { 

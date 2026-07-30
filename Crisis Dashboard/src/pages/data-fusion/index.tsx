@@ -17,9 +17,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "plasma_speed",
     fusedValue: 542.8,
     individualReadings: {
-      "DSCOVR": { "w": 0.44, "value": 541.2, "trust": 0.99 },
-      "ACE": { "w": 0.33, "value": 543.5, "trust": 0.98 },
-      "WIND": { "w": 0.23, "value": 543.8, "trust": 0.96 },
+      "DSCOVR": 541.2,
+      "ACE": 543.5,
+      "WIND": 543.8,
       "confidence": 0.942
     }
   },
@@ -28,9 +28,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "bt",
     fusedValue: 8.4,
     individualReadings: {
-      "DSCOVR": { "w": 0.31, "value": 8.3, "trust": 0.99 },
-      "ACE": { "w": 0.45, "value": 8.5, "trust": 0.98 },
-      "WIND": { "w": 0.24, "value": 8.4, "trust": 0.96 },
+      "DSCOVR": 8.3,
+      "ACE": 8.5,
+      "WIND": 8.4,
       "confidence": 0.961
     }
   },
@@ -39,9 +39,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "bz",
     fusedValue: -4.2,
     individualReadings: {
-      "DSCOVR": { "w": 0.32, "value": -4.1, "trust": 0.99 },
-      "ACE": { "w": 0.28, "value": -4.3, "trust": 0.98 },
-      "WIND": { "w": 0.40, "value": -4.2, "trust": 0.96 },
+      "DSCOVR": -4.1,
+      "ACE": -4.3,
+      "WIND": -4.2,
       "confidence": 0.914
     }
   },
@@ -50,9 +50,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "bx",
     fusedValue: 3.1,
     individualReadings: {
-      "DSCOVR": { "w": 0.42, "value": 3.0, "trust": 0.99 },
-      "ACE": { "w": 0.34, "value": 3.2, "trust": 0.98 },
-      "WIND": { "w": 0.24, "value": 3.1, "trust": 0.96 },
+      "DSCOVR": 3.0,
+      "ACE": 3.2,
+      "WIND": 3.1,
       "confidence": 0.895
     }
   },
@@ -61,9 +61,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "by",
     fusedValue: -5.8,
     individualReadings: {
-      "DSCOVR": { "w": 0.30, "value": -5.7, "trust": 0.99 },
-      "ACE": { "w": 0.46, "value": -5.9, "trust": 0.98 },
-      "WIND": { "w": 0.24, "value": -5.8, "trust": 0.96 },
+      "DSCOVR": -5.7,
+      "ACE": -5.9,
+      "WIND": -5.8,
       "confidence": 0.928
     }
   },
@@ -72,9 +72,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "density",
     fusedValue: 12.6,
     individualReadings: {
-      "DSCOVR": { "w": 0.35, "value": 12.5, "trust": 0.99 },
-      "ACE": { "w": 0.42, "value": 12.7, "trust": 0.98 },
-      "WIND": { "w": 0.23, "value": 12.6, "trust": 0.96 },
+      "DSCOVR": 12.5,
+      "ACE": 12.7,
+      "WIND": 12.6,
       "confidence": 0.937
     }
   },
@@ -83,9 +83,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "temperature",
     fusedValue: 185400.0,
     individualReadings: {
-      "DSCOVR": { "w": 0.43, "value": 185000, "trust": 0.99 },
-      "ACE": { "w": 0.33, "value": 186000, "trust": 0.98 },
-      "WIND": { "w": 0.24, "value": 185200, "trust": 0.96 },
+      "DSCOVR": 185000,
+      "ACE": 186000,
+      "WIND": 185200,
       "confidence": 0.876
     }
   },
@@ -94,9 +94,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "dynamic_pressure",
     fusedValue: 6.12,
     individualReadings: {
-      "DSCOVR": { "w": 0.32, "value": 6.10, "trust": 0.99 },
-      "ACE": { "w": 0.28, "value": 6.15, "trust": 0.98 },
-      "WIND": { "w": 0.40, "value": 6.12, "trust": 0.96 },
+      "DSCOVR": 6.10,
+      "ACE": 6.15,
+      "WIND": 6.12,
       "confidence": 0.903
     }
   },
@@ -105,9 +105,9 @@ const INITIAL_FUSION: FusionResult[] = [
     parameterName: "electric_field",
     fusedValue: 2.28,
     individualReadings: {
-      "DSCOVR": { "w": 0.45, "value": 2.26, "trust": 0.99 },
-      "ACE": { "w": 0.32, "value": 2.30, "trust": 0.98 },
-      "WIND": { "w": 0.23, "value": 2.28, "trust": 0.96 },
+      "DSCOVR": 2.26,
+      "ACE": 2.30,
+      "WIND": 2.28,
       "confidence": 0.889
     }
   }
